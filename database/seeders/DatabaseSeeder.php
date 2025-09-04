@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\RegistrationStatus;
-use App\Models\Clazz;
+use App\Models\YogaClass;
 use App\Models\Customer;
 use App\Models\Registration;
 use App\Models\Teacher;
@@ -24,11 +24,11 @@ class DatabaseSeeder extends Seeder
         $teachers = Teacher::factory()->count(5)->create();
         $this->command->info('> Teachers: '.Teacher::count());
 
-        $classes = Clazz::factory()->count(8)->create();
+        $classes = YogaClass::factory()->count(8)->create();
         foreach ($classes as $c) {
             $c->update(['teacher_id' => $teachers->random()->id]);
         }
-        $this->command->info('> Classes: '.Clazz::count());
+        $this->command->info('> Classes: '.YogaClass::count());
 
         $customers = Customer::factory()->count(30)->create();
         $this->command->info('> Customers: '.Customer::count());
