@@ -45,6 +45,6 @@ composer.phar
 # Misc env files
 .env.local
 .env.testing
-.env.staging
+.env
 .env.development
 
