@@ -25,4 +25,26 @@ Thumbs.db
 /storage/logs/*.log
 /storage/framework/*
 /bootstrap/cache/*
+# MacOS swap files
+*.swp
+*.swo
+# Windows temp files
+*.tmp
+*.bak
+# Laravel IDE Helper
+/_ide_helper.php
+/_ide_helper_models.php
+# PHPUnit coverage
+coverage.xml
+.phpunit.cache
+# Composer
+composer.phar
+# Vite/webpack
+/.vite
+/.webpack
+# Misc env files
+.env.local
+.env.testing
+.env.staging
+.env.development
 
