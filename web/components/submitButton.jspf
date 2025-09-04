@@ -1,0 +1,2 @@
+<%-- Nút submit chuẩn, tái sử dụng --%>
+<button class="btn" type="submit"><%= label %></button>

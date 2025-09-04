@@ -1,0 +1,57 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\ClazzController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\PublicCatalogController;
+use App\Http\Controllers\UnifiedRegistrationController;
+
+Route::prefix('public')->group(function () {
+    Route::get('/teachers', [PublicCatalogController::class, 'teachers']);
+    Route::get('/teachers/{teacher}', [PublicCatalogController::class, 'teacher']);
+    Route::get('/classes',  [PublicCatalogController::class, 'classes']);
+    Route::get('/classes/{class}',  [PublicCatalogController::class, 'class']);
+
+    Route::post('/registrations', [UnifiedRegistrationController::class, 'store'])
+        ->middleware('throttle:10,1');
+
+});
+
+Route::get('/ping', function () {
+    return response()->json(['message' => 'API is working']);
+});
+
+
+Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+
+    Route::get('/me', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+
+    Route::apiResource('teachers', TeacherController::class);
+
+
+    Route::apiResource('classes', ClazzController::class);
+
+
+    Route::apiResource('customers', CustomerController::class);
+
+
+    Route::apiResource('registrations', RegistrationController::class);
+
+
+    Route::post('/registrations/{id}/confirm', [RegistrationController::class, 'confirm']);
+    Route::post('/registrations/{id}/cancel', [RegistrationController::class, 'cancel']);
+
+});
