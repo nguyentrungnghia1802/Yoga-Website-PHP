@@ -6,7 +6,7 @@ use App\Enums\RegistrationStatus;
 use App\Http\Requests\UnifiedRegistrationRequest;
 use App\Http\Resources\RegistrationResource;
 use App\Models\Customer;
-use App\Models\Clazz;
+use App\Models\YogaClass;
 use App\Models\Registration;
 //use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +47,7 @@ class UnifiedRegistrationController extends Controller
             }
 
 
-            $class   = Clazz::lockForUpdate()->findOrFail($data['class_id']);
+            $class   = YogaClass::lockForUpdate()->findOrFail($data['class_id']);
             $months  = (int) $data['package_months'];
             $discount = match ($months) {
                 1 => 0, 3 => 5, 6 => 10, 12 => 20, default => 0,

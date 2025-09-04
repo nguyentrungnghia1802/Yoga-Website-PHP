@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TeacherResource;
-use App\Http\Resources\ClazzResource;
+use App\Http\Resources\YogaClassResource;
 use App\Models\Teacher;
-use App\Models\Clazz;
+use App\Models\YogaClass;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 
@@ -23,11 +23,6 @@ class PublicCatalogController extends Controller
             ->appends($request->query());
 
         return TeacherResource::collection($list);
-        $q = $request->query('q');
-        $q = is_string($q) ? trim($q) : null;
-        if ($q === '' || strcasecmp($q, 'null') === 0 || strcasecmp($q, 'undefined') === 0) {
-            $q = null;
-        }
     }
 
     public function teacher($id)
@@ -40,17 +35,17 @@ class PublicCatalogController extends Controller
         $q    = $request->string('q')->toString();
         $per  = (int) $request->get('per_page', 20);
 
-        $list = Clazz::with('teacher:id,name')
+        $list = YogaClass::with('teacher:id,name')
             ->when($q, fn($qr) => $qr->where('name', 'like', "%$q%"))
             ->latest('id')
             ->paginate($per)
             ->appends($request->query());
 
-        return ClazzResource::collection($list);
+        return YogaClassResource::collection($list);
     }
 
     public function class($id)
     {
-        return new ClazzResource(Clazz::with('teacher:id,name')->findOrFail($id));
+        return new YogaClassResource(YogaClass::with('teacher:id,name')->findOrFail($id));
     }
 }
