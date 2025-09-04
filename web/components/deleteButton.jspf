@@ -1,0 +1,2 @@
+<%-- Nút xóa dùng cho bảng đăng ký --%>
+<button class="btn" type="button" onclick="deleteRegistration('<%= id %>')">Xóa</button>
