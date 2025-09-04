@@ -65,6 +65,18 @@ class WebController extends Controller
         return view('pages.login');
     }
 
+    public function loginSubmit(Request $request)
+    {
+        // Handle login logic here
+        return redirect()->route('dashboard')->with('success', 'Login successful!');
+    }
+
+    public function registerSubmit(Request $request)
+    {
+        // Handle registration logic here
+        return redirect()->route('register')->with('success', 'Registration submitted successfully!');
+    }
+
     // Admin routes
     public function adminDashboard()
     {
