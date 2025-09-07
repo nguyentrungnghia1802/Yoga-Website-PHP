@@ -6,11 +6,12 @@ use App\Http\Controllers\WebController;
 // Public web routes
 Route::get('/', [WebController::class, 'dashboard'])->name('dashboard');
 Route::get('/classes', [WebController::class, 'classes'])->name('classes');
-Route::get('/team', [WebController::class, 'team'])->name('team');
-Route::get('/members', [WebController::class, 'members'])->name('members');
+Route::get('/registered-classes', [WebController::class, 'registeredClasses'])->name('registered.classes');
+Route::get('/registered-classes/{id}', [WebController::class, 'registeredClassDetail'])->name('registered.class.detail');
 Route::get('/register', [WebController::class, 'register'])->name('register');
 Route::post('/register', [WebController::class, 'registerSubmit'])->name('register.submit');
 Route::get('/contact', [WebController::class, 'contact'])->name('contact');
+Route::post('/contact', [WebController::class, 'contactSend'])->name('contact.send');
 Route::get('/authors', [WebController::class, 'authors'])->name('authors');
 Route::get('/login', [WebController::class, 'login'])->name('login');
 Route::post('/login', [WebController::class, 'loginSubmit'])->name('login.submit');

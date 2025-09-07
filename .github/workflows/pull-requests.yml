@@ -1,12 +1,12 @@
 name: Pull Requests
 
+# Disabled workflow: Block invalid PRs
 on:
-  pull_request_target:
-    types: [opened]
-
-permissions:
-  pull-requests: write
+  workflow_dispatch:
 
 jobs:
-  uneditable:
-    uses: laravel/.github/.github/workflows/pull-requests.yml@main
+  disabled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: This workflow is disabled
+        run: echo "This workflow is disabled."
