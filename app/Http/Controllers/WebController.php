@@ -10,6 +10,33 @@ use Illuminate\Http\Request;
 
 class WebController extends Controller
 {
+    public function registeredClasses(Request $request)
+    {
+        // For demo, show all registrations. In real app, filter by logged-in user.
+        $registrations = Registration::with(['class.teacher'])->get();
+        return view('pages.registered_classes', compact('registrations'));
+    }
+
+    public function registeredClassDetail($id)
+    {
+        $class = YogaClass::with('teacher')->findOrFail($id);
+        $members = Customer::whereHas('registrations', function($q) use ($id) {
+            $q->where('class_id', $id);
+        })->get();
+        return view('pages.registered_class_detail', compact('class', 'members'));
+    }
+    public function contactSend(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'message' => 'required|string',
+        ]);
+
+        // You can implement email sending or save to DB here
+
+        return redirect()->route('contact')->with('success', 'Your message has been sent!');
+    }
     public function dashboard()
     {
         $classesCount = YogaClass::count();
