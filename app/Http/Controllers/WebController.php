@@ -7,9 +7,60 @@ use App\Models\Teacher;
 use App\Models\Customer;
 use App\Models\Registration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WebController extends Controller
 {
+    // Account registration page
+    public function registerAccount()
+    {
+        return view('pages.register_account');
+    }
+
+    // Handle account registration
+    public function registerAccountSubmit(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = \App\Models\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'customer', // default role
+        ]);
+
+        Auth::login($user);
+        return redirect()->route('dashboard')->with('success', 'Đăng ký tài khoản thành công!');
+    }
+
+    // Account login page
+    public function loginAccount()
+    {
+        return view('pages.login_account');
+    }
+
+    // Handle account login
+    public function loginAccountSubmit(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('dashboard');
+            }
+        }
+        return back()->withErrors(['email' => 'Thông tin đăng nhập không đúng!']);
+    }
     public function registeredClasses(Request $request)
     {
         // For demo, show all registrations. In real app, filter by logged-in user.
@@ -84,7 +135,54 @@ class WebController extends Controller
 
     public function authors()
     {
-        return view('pages.authors');
+        $authors = [
+            [
+                'avatar' => '👩‍💼',
+                'name' => 'Nguyễn Thị Cẩm Tú',
+                'role' => 'Trưởng nhóm - Frontend (User site)',
+                'id' => 'K23DTCN549',
+                'task' => 'Develop UI for user site, integrate with API (listen for trigger)'
+            ],
+            [
+                'avatar' => '👨‍💻',
+                'name' => 'Hoàng Trọng Lực',
+                'role' => 'Frontend (Admin site)',
+                'id' => 'K23DTCN542',
+                'task' => 'Develop UI for admin site, integrate with API'
+            ],
+            [
+                'avatar' => '👩‍💻',
+                'name' => 'Nguyễn Thị Thu Hương',
+                'role' => 'Backend (User + Admin), DB Design',
+                'id' => 'K23DTCN539',
+                'task' => 'Develop backend APIs for both admin and user site, design DB'
+            ],
+            [
+                'avatar' => '👨‍💻',
+                'name' => 'Vũ Huy Năng',
+                'role' => 'Frontend (User site)',
+                'id' => 'K23DTCN543',
+                'task' => 'Develop UI for user site, integrate with API'
+            ],
+            [
+                'avatar' => '👨‍💻',
+                'name' => 'Nguyễn Trung Hiếu',
+                'role' => 'Frontend (Admin site)',
+                'id' => 'K23DTCN536',
+                'task' => 'Develop UI for admin site, integrate with API'
+            ],
+        ];
+        $project = [
+            'weeks' => 8,
+            'features' => 15,
+            'files' => 50,
+            'lines' => 1000,
+            'goal' => 'Phát triển một hệ thống quản lý trung tâm Yoga/Gym toàn diện, hỗ trợ đăng ký lớp học, quản lý thành viên, và các tính năng quản trị cho nhân viên. Hệ thống được thiết kế với giao diện thân thiện và dễ sử dụng.',
+            'tech' => ['Java','JSP/Servlet','HTML5','CSS3','JavaScript','MySQL','Bootstrap'],
+            'period' => '8 tuần, từ tháng 1 đến tháng 3 năm 2025',
+            'context' => 'Đây là đồ án cuối kỳ môn "Lập trình Web" thuộc chương trình Công nghệ Thông tin. Dự án được thực hiện dưới sự hướng dẫn của giảng viên và áp dụng các kiến thức đã học trong suốt khóa học.'
+        ];
+        return view('pages.authors', compact('authors','project'));
     }
 
     public function login()

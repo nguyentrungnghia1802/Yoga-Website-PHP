@@ -15,11 +15,10 @@ Route::prefix('public')->group(function () {
     Route::get('/teachers/{teacher}', [PublicCatalogController::class, 'teacher']);
     Route::get('/classes',  [PublicCatalogController::class, 'classes']);
     Route::get('/classes/{class}',  [PublicCatalogController::class, 'class']);
-
-    Route::post('/registrations', [UnifiedRegistrationController::class, 'store'])
-        ->middleware('throttle:10,1');
-
 });
+
+// Allow registration without authentication
+Route::post('/registrations', [UnifiedRegistrationController::class, 'store']);
 
 Route::get('/ping', function () {
     return response()->json(['message' => 'API is working']);
