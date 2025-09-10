@@ -20,6 +20,6 @@ class Teacher extends Model
     ];
 
     public function classes() {
-        return $this->hasMany(Clazz::class, 'teacher_id');
+        return $this->hasMany(YogaClass::class, 'teacher_id');
     }
 }

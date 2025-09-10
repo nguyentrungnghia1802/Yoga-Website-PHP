@@ -20,19 +20,41 @@
 <body>
     @include('components.header')
     
-    <nav class="main-nav">
-        <div class="container">
-            <button class="nav-toggle" onclick="toggleMainNav()" style="display: none;">☰</button>
-            <ul class="nav-list">
-                <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">🏠 Trang chủ</a></li>
-                <li><a href="{{ route('classes') }}" class="{{ request()->routeIs('classes') ? 'active' : '' }}">🧘‍♀️ Lớp học</a></li>
-                <li><a href="{{ route('team') }}" class="{{ request()->routeIs('team') ? 'active' : '' }}">👨‍🏫 Giảng viên</a></li>
-                <li><a href="{{ route('members') }}" class="{{ request()->routeIs('members') ? 'active' : '' }}">👥 Thành viên</a></li>
-                <li><a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'active' : '' }}">📝 Đăng ký</a></li>
-                <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">📞 Liên hệ</a></li>
-                <li><a href="{{ route('authors') }}" class="{{ request()->routeIs('authors') ? 'active' : '' }}">✍️ Tác giả</a></li>
-                <li><a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'active' : '' }}">🔐 Đăng nhập</a></li>
-            </ul>
+    <nav class="main-nav" style="position:sticky;top:0;z-index:999;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="flex:1;">
+                <button class="nav-toggle" onclick="toggleMainNav()" style="display: none;">☰</button>
+                <ul class="nav-list">
+                    <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">🏠 Trang chủ</a></li>
+                    <li><a href="{{ route('classes') }}" class="{{ request()->routeIs('classes') ? 'active' : '' }}">🧘‍♀️ Lớp học</a></li>
+                    <li><a href="{{ route('registered.classes') }}" class="{{ request()->routeIs('registered.classes') ? 'active' : '' }}">� Lớp học đã đăng ký</a></li>
+                    <li><a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'active' : '' }}">📝 Đăng ký</a></li>
+                    <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">📞 Liên hệ</a></li>
+                    <li><a href="{{ route('authors') }}" class="{{ request()->routeIs('authors') ? 'active' : '' }}">✍️ Tác giả</a></li>
+                </ul>
+            </div>
+            <div style="flex-shrink:0;">
+                <div class="dropdown" style="position:relative;">
+                    @guest
+                        <button onclick="toggleDropdown()" class="dropdown-toggle" style="padding:8px 16px;border-radius:6px;background:#eee;border:none;cursor:pointer;">Tài khoản ▼</button>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none;position:absolute;right:0;top:100%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1);border-radius:8px;min-width:160px;">
+                            <a href="{{ route('login') }}" style="display:block;padding:10px 20px;text-decoration:none;color:#333;">Đăng nhập</a>
+                            <a href="{{ route('register.account') }}" style="display:block;padding:10px 20px;text-decoration:none;color:#333;">Đăng ký tài khoản</a>
+                        </div>
+                    @else
+                        <button onclick="toggleDropdown()" class="dropdown-toggle" style="padding:8px 16px;border-radius:6px;background:#eee;border:none;cursor:pointer;">
+                            {{ Auth::user()->name }} ▼
+                        </button>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none;position:absolute;right:0;top:100%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1);border-radius:8px;min-width:160px;">
+                            <a href="{{ route('profile') }}" style="display:block;padding:10px 20px;text-decoration:none;color:#333;">Sửa hồ sơ</a>
+                            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                                @csrf
+                                <button type="submit" style="width:100%;padding:10px 20px;border:none;background:none;text-align:left;color:#333;cursor:pointer;">Đăng xuất</button>
+                            </form>
+                        </div>
+                    @endguest
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -80,6 +102,23 @@
     }
     window.addEventListener('resize', handleMainNavResize);
     document.addEventListener('DOMContentLoaded', handleMainNavResize);
+
+    // Dropdown logic
+    function toggleDropdown() {
+        var menu = document.getElementById('dropdown-menu');
+        if(menu.style.display === 'block') {
+            menu.style.display = 'none';
+        } else {
+            menu.style.display = 'block';
+        }
+    }
+    document.addEventListener('click', function(e) {
+        var dropdown = document.querySelector('.dropdown');
+        var menu = document.getElementById('dropdown-menu');
+        if(!dropdown.contains(e.target)) {
+            if(menu) menu.style.display = 'none';
+        }
+    });
     </script>
     
     <style>
