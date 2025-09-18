@@ -30,10 +30,9 @@ class AdminController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Try to authenticate with username or email
-        $user = User::where('user_name', $request->username)
-                   ->orWhere('email', $request->username)
-                   ->first();
+
+    // Authenticate only with user_name (users table does not have email column)
+    $user = User::where('user_name', $request->username)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user);

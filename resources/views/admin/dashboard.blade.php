@@ -86,7 +86,7 @@
                             🕒 {{ $registration->created_at->diffForHumans() }}
                         </div>
                     </div>
-                    <div class="registration-status-badge status-{{ strtolower($registration->status) }}">
+                    <div class="registration-status-badge status-{{ strtolower($registration->status->value) }}">
                         @switch($registration->status)
                             @case('PENDING')
                                 ⏳ Chờ duyệt
