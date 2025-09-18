@@ -11,8 +11,8 @@
     </div>
     <div class="header-content">
         <h1>📝 Chi tiết Đăng ký #{{ $registration->id }}</h1>
-        <div class="status-badge status-{{ strtolower($registration->status) }}">
-            @switch($registration->status)
+        <div class="status-badge status-{{ strtolower($registration->status->value) }}">
+            @switch($registration->status->value)
                 @case('PENDING')
                     ⏳ Chờ duyệt
                     @break
@@ -23,7 +23,7 @@
                     ❌ Từ chối
                     @break
                 @default
-                    📝 {{ $registration->status }}
+                    📝 {{ $registration->status->value }}
             @endswitch
         </div>
     </div>
@@ -51,19 +51,19 @@
             <div class="section-content">
                 <div class="customer-profile">
                     <div class="customer-avatar">
-                        {{ substr($registration->customer->name, 0, 1) }}
+                        {{ substr($registration->customer ? $registration->customer->name : $registration->customer_name, 0, 1) }}
                     </div>
                     <div class="customer-info">
-                        <h3>{{ $registration->customer->name }}</h3>
+                        <h3>{{ $registration->customer ? $registration->customer->name : $registration->customer_name }}</h3>
                         <div class="info-row">
                             <span class="info-label">📧 Email:</span>
-                            <span class="info-value">{{ $registration->customer->email }}</span>
+                            <span class="info-value">{{ $registration->customer ? $registration->customer->email : $registration->customer_email }}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">📱 Điện thoại:</span>
-                            <span class="info-value">{{ $registration->customer->phone }}</span>
+                            <span class="info-value">{{ $registration->customer ? $registration->customer->phone : $registration->customer_phone }}</span>
                         </div>
-                        @if($registration->customer->address)
+                        @if($registration->customer && $registration->customer->address)
                             <div class="info-row">
                                 <span class="info-label">🏠 Địa chỉ:</span>
                                 <span class="info-value">{{ $registration->customer->address }}</span>
@@ -71,7 +71,7 @@
                         @endif
                         <div class="info-row">
                             <span class="info-label">📅 Tham gia:</span>
-                            <span class="info-value">{{ $registration->customer->created_at->format('d/m/Y') }}</span>
+                            <span class="info-value">{{ $registration->customer ? $registration->customer->created_at->format('d/m/Y') : $registration->created_at->format('d/m/Y') }}</span>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
 
     <!-- Action Buttons -->
     <div class="action-section">
-        @if($registration->status === 'PENDING')
+        @if($registration->status->value === 'PENDING')
             <div class="action-group">
                 <h3>⚡ Hành động nhanh</h3>
                 <div class="action-buttons">

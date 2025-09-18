@@ -9,6 +9,12 @@
         <p>Quản lý thông tin các học viên đăng ký lớp học</p>
     </div>
     <div class="header-actions">
+        <div class="search-form">
+            <form method="GET" action="{{ route('admin.customers') }}">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="🔍 Tìm kiếm theo tên, email, số điện thoại..." class="search-input">
+                <button type="submit" class="search-btn">Tìm kiếm</button>
+            </form>
+        </div>
         <a href="{{ route('admin.customers.create') }}" class="create-btn">
             ➕ Thêm học viên mới
         </a>
@@ -115,14 +121,19 @@
 @push('styles')
 <style>
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
     margin-bottom: 30px;
     padding: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 
 .header-content h1 {

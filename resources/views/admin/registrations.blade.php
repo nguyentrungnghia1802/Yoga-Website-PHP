@@ -9,6 +9,12 @@
         <p>Duyệt và quản lý các đăng ký lớp học</p>
     </div>
     <div class="header-actions">
+        <div class="search-form">
+            <form method="GET" action="{{ route('admin.registrations') }}">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="🔍 Tìm kiếm theo tên, email, lớp học..." class="search-input">
+                <button type="submit" class="search-btn">Tìm kiếm</button>
+            </form>
+        </div>
         <div class="filter-buttons">
             <a href="{{ route('admin.registrations') }}" class="filter-btn {{ request('status') == '' ? 'active' : '' }}">
                 Tất cả
@@ -44,12 +50,12 @@
             <div class="registration-main">
                 <div class="customer-info">
                     <div class="customer-avatar">
-                        {{ substr($registration->customer->name, 0, 1) }}
+                        {{ substr($registration->customer ? $registration->customer->name : $registration->customer_name, 0, 1) }}
                     </div>
                     <div class="customer-details">
-                        <h3>{{ $registration->customer->name }}</h3>
-                        <p>📧 {{ $registration->customer->email }}</p>
-                        <p>📱 {{ $registration->customer->phone }}</p>
+                        <h3>{{ $registration->customer ? $registration->customer->name : $registration->customer_name }}</h3>
+                        <p>📧 {{ $registration->customer ? $registration->customer->email : $registration->customer_email }}</p>
+                        <p>📱 {{ $registration->customer ? $registration->customer->phone : $registration->customer_phone }}</p>
                     </div>
                 </div>
                 
@@ -146,14 +152,15 @@
 @push('styles')
 <style>
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
     margin-bottom: 30px;
     padding: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header-actions {
+    margin-top: 15px;
 }
 
 .header-content h1 {
@@ -192,6 +199,43 @@
 .filter-btn.active {
     background: #667eea;
     color: white;
+}
+
+.search-form {
+    margin-bottom: 15px;
+}
+
+.search-form form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.search-btn {
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-btn:hover {
+    background: #5a6fd8;
 }
 
 .alert {

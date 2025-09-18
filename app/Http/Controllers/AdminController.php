@@ -70,11 +70,28 @@ class AdminController extends Controller
     }
 
     // Registration Management
-    public function registrations()
+    public function registrations(Request $request)
     {
-        $registrations = Registration::with(['customer', 'class.teacher'])
-                                   ->orderBy('created_at', 'desc')
-                                   ->paginate(15);
+        $query = Registration::with(['customer', 'class.teacher']);
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('customer', function($customerQuery) use ($search) {
+                    $customerQuery->where('name', 'like', "%{$search}%")
+                                 ->orWhere('email', 'like', "%{$search}%")
+                                 ->orWhere('phone', 'like', "%{$search}%");
+                })->orWhereHas('class', function($classQuery) use ($search) {
+                    $classQuery->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+        
+        if ($request->filled('status')) {
+            $query->where('status', strtoupper($request->status));
+        }
+        
+        $registrations = $query->orderBy('created_at', 'desc')->paginate(15);
         
         $stats = [
             'pending' => Registration::where('status', 'PENDING')->count(),
@@ -94,10 +111,34 @@ class AdminController extends Controller
     public function approveRegistration($id)
     {
         $registration = Registration::findOrFail($id);
-        $registration->update(['status' => 'APPROVED']);
+        
+        // Create customer when registration is approved
+        if (!$registration->customer_id) {
+            $customer = Customer::where('email', $registration->customer_email)
+                       ->orWhere('phone', $registration->customer_phone)
+                       ->first();
+            
+            if (!$customer) {
+                $customer = Customer::create([
+                    'name' => $registration->customer_name,
+                    'email' => $registration->customer_email,
+                    'phone' => $registration->customer_phone,
+                    'birthday' => null,
+                    'gender' => null,
+                    'address' => null,
+                ]);
+            }
+            
+            $registration->update([
+                'customer_id' => $customer->id,
+                'status' => 'APPROVED'
+            ]);
+        } else {
+            $registration->update(['status' => 'APPROVED']);
+        }
         
         return redirect()->route('admin.registrations')
-                        ->with('success', 'Đã phê duyệt đăng ký #' . $id);
+                        ->with('success', 'Đã phê duyệt đăng ký #' . $id . ' và tạo học viên thành công!');
     }
 
     public function rejectRegistration($id)
@@ -110,14 +151,26 @@ class AdminController extends Controller
     }
 
     // Class Management
-    public function classes()
+    public function classes(Request $request)
     {
-        $classes = YogaClass::with('teacher')
-                           ->withCount(['registrations' => function($q) {
-                               $q->where('status', 'APPROVED');
-                           }])
-                           ->orderBy('created_at', 'desc')
-                           ->paginate(15);
+        $query = YogaClass::with('teacher')
+                          ->withCount(['registrations' => function($q) {
+                              $q->where('status', 'APPROVED');
+                          }]);
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%")
+                  ->orWhereHas('teacher', function($teacherQuery) use ($search) {
+                      $teacherQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        $classes = $query->orderBy('created_at', 'desc')->paginate(15);
         return view('admin.classes', compact('classes'));
     }
 
@@ -197,11 +250,21 @@ class AdminController extends Controller
     }
 
     // Customer Management
-    public function customers()
+    public function customers(Request $request)
     {
-        $customers = Customer::withCount('registrations')
-                           ->orderBy('created_at', 'desc')
-                           ->paginate(15);
+        $query = Customer::withCount('registrations');
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+        
+        $customers = $query->orderBy('created_at', 'desc')->paginate(15);
         
         return view('admin.customers', compact('customers'));
     }
@@ -272,9 +335,22 @@ class AdminController extends Controller
     }
 
     // Teacher Management
-    public function teachers()
+    public function teachers(Request $request)
     {
-        $teachers = Teacher::withCount('classes')->orderBy('created_at', 'desc')->paginate(15);
+        $query = Teacher::withCount('classes');
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('exp_year', 'like', "%{$search}%");
+            });
+        }
+        
+        $teachers = $query->orderBy('created_at', 'desc')->paginate(15);
         return view('admin.teachers', compact('teachers'));
     }
 

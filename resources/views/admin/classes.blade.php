@@ -9,6 +9,12 @@
         <p>Tạo và quản lý các lớp học Yoga/Gym</p>
     </div>
     <div class="header-actions">
+        <div class="search-form">
+            <form method="GET" action="{{ route('admin.classes') }}">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="🔍 Tìm kiếm theo tên lớp, giảng viên..." class="search-input">
+                <button type="submit" class="search-btn">Tìm kiếm</button>
+            </form>
+        </div>
         <a href="{{ route('admin.classes.create') }}" class="create-btn">
             ➕ Tạo lớp học mới
         </a>
@@ -114,14 +120,19 @@
 @push('styles')
 <style>
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
     margin-bottom: 30px;
     padding: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 
 .header-content h1 {
