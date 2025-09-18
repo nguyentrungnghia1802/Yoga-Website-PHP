@@ -109,6 +109,25 @@ class WebController extends Controller
         return view('pages.classes', compact('classes'));
     }
 
+    public function classDetail($id)
+    {
+        $class = YogaClass::with('teacher')->findOrFail($id);
+        
+        // Get approved registrations for this class
+        $approvedRegistrations = Registration::with('customer')
+            ->where('class_id', $id)
+            ->where('status', 'APPROVED')
+            ->get();
+        
+        $registeredStudents = $approvedRegistrations->map(function($registration) {
+            return $registration->customer;
+        });
+        
+        $availableSlots = $class->quantity - $registeredStudents->count();
+        
+        return view('pages.class_detail', compact('class', 'registeredStudents', 'availableSlots'));
+    }
+
     public function team()
     {
         $teachers = Teacher::latest()->paginate(12);
@@ -198,8 +217,42 @@ class WebController extends Controller
 
     public function registerSubmit(Request $request)
     {
-        // Handle registration logic here
-        return redirect()->route('register')->with('success', 'Registration submitted successfully!');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'class_id' => 'required|exists:classes,id',
+            'start_date' => 'required|date',
+        ]);
+
+        // Find or create customer
+        $customer = Customer::where('email', $request->email)
+                   ->orWhere('phone', $request->phone)
+                   ->first();
+        
+        if (!$customer) {
+            $customer = Customer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'birthday' => null,
+                'gender' => null,
+                'address' => null,
+            ]);
+        }
+
+        // Create registration with PENDING status
+        $registration = Registration::create([
+            'customer_id' => $customer->id,
+            'class_id' => $request->class_id,
+            'package_months' => $request->package_months ?? 1,
+            'discount' => 0,
+            'final_price' => YogaClass::find($request->class_id)->price,
+            'status' => 'PENDING',
+            'note' => $request->notes,
+        ]);
+
+        return redirect()->route('register')->with('success', 'Đăng ký thành công! Đơn đăng ký của bạn đang chờ xét duyệt. Mã đăng ký: #' . $registration->id);
     }
 
     // Admin routes

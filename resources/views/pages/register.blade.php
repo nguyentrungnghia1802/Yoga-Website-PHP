@@ -7,7 +7,8 @@
 <div class="form-container">
     <div class="card">
         <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Thông tin đăng ký</h2>
-        <form id="registerForm" autocomplete="off">
+        <form id="registerForm" method="POST" action="{{ route('register.submit') }}" autocomplete="off">
+            @csrf
             <div class="form-group">
                 <label for="fullname">👤 Họ và tên *</label>
                 <input type="text" id="fullname" name="name" required placeholder="Nhập họ và tên đầy đủ">
@@ -25,7 +26,9 @@
                 <select id="className" name="class_id" required>
                     <option value="">-- Chọn lớp học --</option>
                     @foreach($classes as $class)
-                        <option value="{{ $class->id }}">{{ $class->name }} ({{ \Carbon\Carbon::parse($class->date_time)->format('H:i') }})</option>
+                        <option value="{{ $class->id }}" data-price="{{ $class->price }}">
+                            {{ $class->name }} - {{ $class->start_time }} - {{ $class->end_time }} ({{ number_format($class->price, 0, ',', '.') }}₫)
+                        </option>
                     @endforeach
                 </select>
             </div>

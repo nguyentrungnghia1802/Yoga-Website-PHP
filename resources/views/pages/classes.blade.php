@@ -22,14 +22,17 @@
     <div class="class-card">
         <h3>{{ $class->name }}</h3>
         <p>{{ $class->description }}</p>
-        <span class="time">⏰ {{ \Carbon\Carbon::parse($class->date_time)->format('H:i') }}</span>
-        <div class="price">💰 {{ number_format($class->price ?? 500000) }}đ/tháng</div>
+        <span class="time">⏰ {{ $class->start_time }} - {{ $class->end_time }}</span>
+        <div class="price">💰 {{ number_format($class->price ?? 500000, 0, ',', '.') }}đ</div>
         <div style="margin-top: 15px;">
             <span style="background: #51cf66; color: white; padding: 4px 8px; border-radius: 15px; font-size: 12px;">
-                👥 {{ $class->teacher->name ?? 'Chưa có giảng viên' }}
+                �‍🏫 {{ $class->teacher->name ?? 'Chưa có giảng viên' }}
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <div style="margin-top: 10px; display: flex; gap: 10px;">
+            <a href="{{ route('class.detail', $class->id) }}" class="btn" style="flex: 1; background: #f8f9fa; color: #495057; text-align: center;">👁️ Xem chi tiết</a>
+            <a href="{{ route('register') }}" class="btn btn-primary" style="flex: 1; text-align: center;">📝 Đăng ký</a>
+        </div>
     </div>
     @endforeach
     
