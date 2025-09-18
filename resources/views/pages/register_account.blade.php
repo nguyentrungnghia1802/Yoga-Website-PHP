@@ -23,7 +23,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Đăng ký</button>
     </form>
-    <p class="mt-3">Đã có tài khoản? <a href="{{ route('admin.login') }}">Đăng nhập (Admin)</a></p>
+    <!-- Đã có tài khoản? Đăng nhập (Admin) removed for user registration -->
 </div>
 @endsection
 @push('styles')
