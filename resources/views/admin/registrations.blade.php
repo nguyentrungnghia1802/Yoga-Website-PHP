@@ -62,7 +62,7 @@
                 
                 <div class="registration-meta">
                     <div class="status-badge status-{{ strtolower($registration->status->value) }}">
-                        @switch($registration->status)
+                        @switch($registration->status->value)
                             @case('PENDING')
                                 ⏳ Chờ duyệt
                                 @break
@@ -73,7 +73,7 @@
                                 ❌ Từ chối
                                 @break
                             @default
-                                📝 {{ $registration->status }}
+                                📝 {{ $registration->status->value }}
                         @endswitch
                     </div>
                     <div class="registration-date">
@@ -88,7 +88,7 @@
             </div>
             
             <div class="registration-actions">
-                @if($registration->status === 'PENDING')
+                @if($registration->status->value === 'PENDING')
                     <form method="POST" action="{{ route('admin.registrations.approve', $registration->id) }}" style="display: inline;">
                         @csrf
                         @method('PATCH')
@@ -106,17 +106,20 @@
                     </form>
                 @endif
                 
-                <a href="{{ route('admin.registrations.show', $registration->id) }}" class="action-btn view-btn">
+                <a href="{{ route('admin.registrations.detail', $registration->id) }}" class="action-btn view-btn">
                     👁️ Chi tiết
                 </a>
                 
-                <form method="POST" action="{{ route('admin.registrations.destroy', $registration->id) }}" style="display: inline;">
+                <!-- Xóa đăng ký: Route destroy chưa định nghĩa trong routes/web.php -->
+                <!--
+                <form method="POST" action="#" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa đăng ký này? Hành động này không thể hoàn tác!')">
                         🗑️ Xóa
                     </button>
                 </form>
+                -->
             </div>
         </div>
     @empty

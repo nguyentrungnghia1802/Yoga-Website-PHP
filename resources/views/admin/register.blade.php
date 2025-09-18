@@ -21,12 +21,7 @@
                     <td>{{ $registration->class->name }}</td>
                     <td>{{ $registration->status }}</td>
                     <td>
-                        <a href="{{ route('admin.register.edit', $registration->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                        <form action="{{ route('admin.register.destroy', $registration->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </form>
+                        <!-- Edit/Delete actions removed: routes not defined in web.php -->
                     </td>
                 </tr>
                 @endforeach

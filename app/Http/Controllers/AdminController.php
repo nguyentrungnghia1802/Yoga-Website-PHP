@@ -76,7 +76,13 @@ class AdminController extends Controller
                                    ->orderBy('created_at', 'desc')
                                    ->paginate(15);
         
-        return view('admin.registrations', compact('registrations'));
+        $stats = [
+            'pending' => Registration::where('status', 'PENDING')->count(),
+            'approved' => Registration::where('status', 'APPROVED')->count(),
+            'rejected' => Registration::where('status', 'REJECTED')->count(),
+        ];
+        
+        return view('admin.registrations', compact('registrations', 'stats'));
     }
 
     public function registrationDetail($id)
@@ -106,7 +112,12 @@ class AdminController extends Controller
     // Class Management
     public function classes()
     {
-        $classes = YogaClass::with('teacher')->orderBy('created_at', 'desc')->paginate(15);
+        $classes = YogaClass::with('teacher')
+                           ->withCount(['registrations' => function($q) {
+                               $q->where('status', 'APPROVED');
+                           }])
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(15);
         return view('admin.classes', compact('classes'));
     }
 

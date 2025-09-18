@@ -180,19 +180,7 @@
         <div class="action-group">
             <h3>🛠️ Quản lý</h3>
             <div class="action-buttons">
-                <a href="{{ route('admin.customers.show', $registration->customer->id) }}" class="action-btn view-btn">
-                    👤 Xem học viên
-                </a>
-                <a href="{{ route('admin.classes.show', $registration->class->id) }}" class="action-btn view-btn">
-                    🧘‍♀️ Xem lớp học
-                </a>
-                <form method="POST" action="{{ route('admin.registrations.destroy', $registration->id) }}" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa đăng ký này? Hành động này không thể hoàn tác!')">
-                        🗑️ Xóa đăng ký
-                    </button>
-                </form>
+                <!-- Các route show/destroy này không tồn tại trong routes/web.php -->
             </div>
         </div>
     </div>
