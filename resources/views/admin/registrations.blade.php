@@ -61,7 +61,7 @@
                 </div>
                 
                 <div class="registration-meta">
-                    <div class="status-badge status-{{ strtolower($registration->status) }}">
+                    <div class="status-badge status-{{ strtolower($registration->status->value) }}">
                         @switch($registration->status)
                             @case('PENDING')
                                 ⏳ Chờ duyệt
