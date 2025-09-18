@@ -22,10 +22,10 @@
             <a href="{{ route('admin.registrations', ['status' => 'pending']) }}" class="filter-btn {{ request('status') == 'pending' ? 'active' : '' }}">
                 Chờ duyệt ({{ $stats['pending'] ?? 0 }})
             </a>
-            <a href="{{ route('admin.registrations', ['status' => 'approved']) }}" class="filter-btn {{ request('status') == 'approved' ? 'active' : '' }}">
+            <a href="{{ route('admin.registrations', ['status' => 'confirmed']) }}" class="filter-btn {{ request('status') == 'confirmed' ? 'active' : '' }}">
                 Đã duyệt ({{ $stats['approved'] ?? 0 }})
             </a>
-            <a href="{{ route('admin.registrations', ['status' => 'rejected']) }}" class="filter-btn {{ request('status') == 'rejected' ? 'active' : '' }}">
+            <a href="{{ route('admin.registrations', ['status' => 'cancelled']) }}" class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}">
                 Từ chối ({{ $stats['rejected'] ?? 0 }})
             </a>
         </div>
@@ -72,10 +72,10 @@
                             @case('PENDING')
                                 ⏳ Chờ duyệt
                                 @break
-                            @case('APPROVED')
+                            @case('CONFIRMED')
                                 ✅ Đã duyệt
                                 @break
-                            @case('REJECTED')
+                            @case('CANCELLED')
                                 ❌ Từ chối
                                 @break
                             @default
@@ -97,7 +97,6 @@
                 @if($registration->status->value === 'PENDING')
                     <form method="POST" action="{{ route('admin.registrations.approve', $registration->id) }}" style="display: inline;">
                         @csrf
-                        @method('PATCH')
                         <button type="submit" class="action-btn approve-btn" onclick="return confirm('Bạn có chắc muốn duyệt đăng ký này?')">
                             ✅ Duyệt
                         </button>
@@ -105,7 +104,6 @@
                     
                     <form method="POST" action="{{ route('admin.registrations.reject', $registration->id) }}" style="display: inline;">
                         @csrf
-                        @method('PATCH')
                         <button type="submit" class="action-btn reject-btn" onclick="return confirm('Bạn có chắc muốn từ chối đăng ký này?')">
                             ❌ Từ chối
                         </button>
@@ -345,12 +343,12 @@
     color: #856404;
 }
 
-.status-approved {
+.status-confirmed {
     background: #d4edda;
     color: #155724;
 }
 
-.status-rejected {
+.status-cancelled {
     background: #f8d7da;
     color: #721c24;
 }

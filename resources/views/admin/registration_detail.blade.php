@@ -16,10 +16,10 @@
                 @case('PENDING')
                     ⏳ Chờ duyệt
                     @break
-                @case('APPROVED')
+                @case('CONFIRMED')
                     ✅ Đã duyệt
                     @break
-                @case('REJECTED')
+                @case('CANCELLED')
                     ❌ Từ chối
                     @break
                 @default
@@ -160,7 +160,6 @@
                 <div class="action-buttons">
                     <form method="POST" action="{{ route('admin.registrations.approve', $registration->id) }}" style="display: inline;">
                         @csrf
-                        @method('PATCH')
                         <button type="submit" class="action-btn approve-btn" onclick="return confirm('Bạn có chắc muốn duyệt đăng ký này?')">
                             ✅ Duyệt đăng ký
                         </button>
@@ -168,7 +167,6 @@
                     
                     <form method="POST" action="{{ route('admin.registrations.reject', $registration->id) }}" style="display: inline;">
                         @csrf
-                        @method('PATCH')
                         <button type="submit" class="action-btn reject-btn" onclick="return confirm('Bạn có chắc muốn từ chối đăng ký này?')">
                             ❌ Từ chối đăng ký
                         </button>
@@ -238,12 +236,12 @@
     color: #856404;
 }
 
-.status-approved {
+.status-confirmed {
     background: #d4edda;
     color: #155724;
 }
 
-.status-rejected {
+.status-cancelled {
     background: #f8d7da;
     color: #721c24;
 }

@@ -85,13 +85,13 @@
             </div>
             
             <div class="customer-actions">
-                <a href="{{ route('admin.customers.detail', $customer) }}" class="action-btn view-btn">
+                <a href="{{ route('admin.customers.detail', $customer->id) }}" class="action-btn view-btn">
                     👁️ Xem chi tiết
                 </a>
-                <a href="{{ route('admin.customers.edit', $customer) }}" class="action-btn edit-btn">
+                <a href="{{ route('admin.customers.edit', $customer->id) }}" class="action-btn edit-btn">
                     ✏️ Chỉnh sửa
                 </a>
-                <form method="POST" action="{{ route('admin.customers.delete', $customer) }}" style="display: inline;">
+                <form method="POST" action="{{ route('admin.customers.delete', $customer->id) }}" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa học viên này? Tất cả đăng ký liên quan cũng sẽ bị xóa!')">
@@ -134,6 +134,39 @@
     justify-content: space-between;
     align-items: center;
     gap: 15px;
+}
+
+.search-form form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    width: 300px;
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.search-btn {
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-btn:hover {
+    background: #5a6fd8;
 }
 
 .header-content h1 {
