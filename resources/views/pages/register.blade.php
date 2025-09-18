@@ -60,7 +60,7 @@
         </form>
         <div id="registerResult" style="margin-top:20px;"></div>
         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="color: #666;">Đã có tài khoản? <a href="{{ route('admin.login') }}" style="color: #667eea; text-decoration: none;">Đăng nhập ngay (Admin)</a></p>
+            <!-- Đã có tài khoản? Đăng nhập ngay (Admin) removed for user registration form -->
         </div>
     </div>
 </div>
