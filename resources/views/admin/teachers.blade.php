@@ -118,14 +118,19 @@
 @push('styles')
 <style>
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
     margin-bottom: 30px;
     padding: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 
 .header-content h1 {
@@ -137,6 +142,46 @@
 .header-content p {
     color: #666;
     margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.search-form form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    width: 300px;
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.search-btn {
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-btn:hover {
+    background: #5a6fd8;
 }
 
 .create-btn {
@@ -358,6 +403,14 @@
     .page-header {
         flex-direction: column;
         gap: 20px;
+    }
+    
+    .header-actions {
+        align-items: stretch;
+    }
+    
+    .search-input {
+        width: 100%;
     }
     
     .teacher-main {

@@ -225,25 +225,12 @@ class WebController extends Controller
             'start_date' => 'required|date',
         ]);
 
-        // Find or create customer
-        $customer = Customer::where('email', $request->email)
-                   ->orWhere('phone', $request->phone)
-                   ->first();
-        
-        if (!$customer) {
-            $customer = Customer::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'birthday' => null,
-                'gender' => null,
-                'address' => null,
-            ]);
-        }
-
-        // Create registration with PENDING status
+        // Create registration with PENDING status - DON'T create customer yet
+        // Store customer info in registration table for later processing
         $registration = Registration::create([
-            'customer_id' => $customer->id,
+            'customer_name' => $request->name,
+            'customer_email' => $request->email,
+            'customer_phone' => $request->phone,
             'class_id' => $request->class_id,
             'package_months' => $request->package_months ?? 1,
             'discount' => 0,
