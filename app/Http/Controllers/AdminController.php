@@ -7,6 +7,7 @@ use App\Models\YogaClass;
 use App\Models\Teacher;
 use App\Models\Customer;
 use App\Models\Registration;
+use App\Enums\RegistrationStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -57,8 +58,8 @@ class AdminController extends Controller
             'teachers' => Teacher::count(),
             'customers' => Customer::count(),
             'registrations' => Registration::count(),
-            'pending_registrations' => Registration::where('status', 'PENDING')->count(),
-            'approved_registrations' => Registration::where('status', 'APPROVED')->count(),
+            'pending_registrations' => Registration::where('status', RegistrationStatus::PENDING->value)->count(),
+            'approved_registrations' => Registration::where('status', RegistrationStatus::CONFIRMED->value)->count(),
         ];
 
         $recentRegistrations = Registration::with(['customer', 'class'])
@@ -94,9 +95,9 @@ class AdminController extends Controller
         $registrations = $query->orderBy('created_at', 'desc')->paginate(15);
         
         $stats = [
-            'pending' => Registration::where('status', 'PENDING')->count(),
-            'approved' => Registration::where('status', 'APPROVED')->count(),
-            'rejected' => Registration::where('status', 'REJECTED')->count(),
+            'pending' => Registration::where('status', RegistrationStatus::PENDING->value)->count(),
+            'approved' => Registration::where('status', RegistrationStatus::CONFIRMED->value)->count(),
+            'rejected' => Registration::where('status', RegistrationStatus::CANCELLED->value)->count(),
         ];
         
         return view('admin.registrations', compact('registrations', 'stats'));
@@ -131,10 +132,10 @@ class AdminController extends Controller
             
             $registration->update([
                 'customer_id' => $customer->id,
-                'status' => 'APPROVED'
+                'status' => RegistrationStatus::CONFIRMED
             ]);
         } else {
-            $registration->update(['status' => 'APPROVED']);
+            $registration->update(['status' => RegistrationStatus::CONFIRMED]);
         }
         
         return redirect()->route('admin.registrations')
@@ -144,7 +145,7 @@ class AdminController extends Controller
     public function rejectRegistration($id)
     {
         $registration = Registration::findOrFail($id);
-        $registration->update(['status' => 'REJECTED']);
+        $registration->update(['status' => RegistrationStatus::CANCELLED]);
         
         return redirect()->route('admin.registrations')
                         ->with('success', 'Đã từ chối đăng ký #' . $id);
@@ -155,7 +156,7 @@ class AdminController extends Controller
     {
         $query = YogaClass::with('teacher')
                           ->withCount(['registrations' => function($q) {
-                              $q->where('status', 'APPROVED');
+                              $q->where('status', RegistrationStatus::CONFIRMED->value);
                           }]);
         
         if ($request->filled('search')) {

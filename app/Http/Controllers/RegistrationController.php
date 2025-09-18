@@ -6,7 +6,7 @@ use App\Enums\RegistrationStatus;
 use App\Http\Requests\StoreRegistrationRequest;
 use App\Http\Requests\UpdateRegistrationRequest;
 use App\Http\Resources\RegistrationResource;
-use App\Models\Clazz;
+use App\Models\YogaClass;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +36,7 @@ class RegistrationController extends Controller
         $data = $request->validated();
 
         return DB::transaction(function () use ($data) {
-            $class = Clazz::lockForUpdate()->findOrFail($data['class_id']);
+            $class = YogaClass::lockForUpdate()->findOrFail($data['class_id']);
             $discountPercent = $this->discountForMonths((int)$data['package_months']);
             $final = $class->price * $data['package_months'] * (1 - $discountPercent/100);
 
@@ -61,14 +61,14 @@ class RegistrationController extends Controller
         $data = $request->validated();
 
         if (isset($data['package_months'])) {
-            $class = Clazz::findOrFail($registration->class_id);
+            $class = YogaClass::findOrFail($registration->class_id);
             $discountPercent = $this->discountForMonths((int)$data['package_months']);
             $data['discount']    = $discountPercent;
             $data['final_price'] = $class->price * $data['package_months'] * (1 - $discountPercent/100);
         }
 
         if (isset($data['class_id'])) {
-            $class = Clazz::findOrFail($data['class_id']);
+            $class = YogaClass::findOrFail($data['class_id']);
             $months = (int)($data['package_months'] ?? $registration->package_months);
             $discountPercent = $this->discountForMonths($months);
             $data['discount']    = $discountPercent;
@@ -100,7 +100,7 @@ class RegistrationController extends Controller
                 ], 400);
             }
 
-            $class = Clazz::lockForUpdate()->findOrFail($reg->class_id);
+            $class = YogaClass::lockForUpdate()->findOrFail($reg->class_id);
 
             $confirmed = Registration::where('class_id', $class->id)
                 ->where('status', RegistrationStatus::CONFIRMED->value)

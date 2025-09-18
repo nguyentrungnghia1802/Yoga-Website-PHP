@@ -82,13 +82,13 @@
             </div>
             
             <div class="teacher-actions">
-                <a href="{{ route('admin.teachers.detail', $teacher) }}" class="action-btn view-btn">
+                <a href="{{ route('admin.teachers.detail', $teacher->id) }}" class="action-btn view-btn">
                     👁️ Xem chi tiết
                 </a>
-                <a href="{{ route('admin.teachers.edit', $teacher) }}" class="action-btn edit-btn">
+                <a href="{{ route('admin.teachers.edit', $teacher->id) }}" class="action-btn edit-btn">
                     ✏️ Chỉnh sửa
                 </a>
-                <form method="POST" action="{{ route('admin.teachers.delete', $teacher) }}" style="display: inline;">
+                <form method="POST" action="{{ route('admin.teachers.delete', $teacher->id) }}" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa giảng viên này? Tất cả lớp học liên quan cũng sẽ bị ảnh hưởng!')">
