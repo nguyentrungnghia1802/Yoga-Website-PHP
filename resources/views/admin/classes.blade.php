@@ -44,11 +44,11 @@
                         </div>
                         <div class="detail-item">
                             <span class="detail-icon">🕒</span>
-                            <span>{{ $class->schedule }}</span>
+                            <span>{{ $class->lich_hoc ?? 'Chưa xác định' }} ({{ $class->start_time->format('H:i') }} - {{ $class->end_time->format('H:i') }})</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-icon">👥</span>
-                            <span>{{ $class->registrations_count ?? 0 }}/{{ $class->capacity }} học viên</span>
+                            <span>{{ $class->registrations_count ?? 0 }}/{{ $class->quantity }} học viên</span>
                         </div>
                     </div>
                     @if($class->description)
@@ -64,11 +64,11 @@
                         <div class="stat-label">Đăng ký</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">{{ $class->capacity - ($class->registrations_count ?? 0) }}</div>
+                        <div class="stat-number">{{ $class->quantity - ($class->registrations_count ?? 0) }}</div>
                         <div class="stat-label">Còn trống</div>
                     </div>
-                    <div class="class-status {{ ($class->registrations_count ?? 0) >= $class->capacity ? 'full' : 'available' }}">
-                        @if(($class->registrations_count ?? 0) >= $class->capacity)
+                    <div class="class-status {{ ($class->registrations_count ?? 0) >= $class->quantity ? 'full' : 'available' }}">
+                        @if(($class->registrations_count ?? 0) >= $class->quantity)
                             🔴 Đã đầy
                         @else
                             🟢 Còn chỗ
@@ -78,13 +78,13 @@
             </div>
             
             <div class="class-actions">
-                <a href="{{ route('admin.classes.show', $class) }}" class="action-btn view-btn">
+                <a href="{{ route('admin.classes.detail', $class) }}" class="action-btn view-btn">
                     👁️ Xem chi tiết
                 </a>
                 <a href="{{ route('admin.classes.edit', $class) }}" class="action-btn edit-btn">
                     ✏️ Chỉnh sửa
                 </a>
-                <form method="POST" action="{{ route('admin.classes.destroy', $class) }}" style="display: inline;">
+                <form method="POST" action="{{ route('admin.classes.delete', $class) }}" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa lớp học này? Tất cả đăng ký liên quan cũng sẽ bị xóa!')">

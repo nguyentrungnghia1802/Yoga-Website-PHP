@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
-@section('title', 'Quản lý Giảng viên - Admin')
+@section('title', 'Quản lý Học viên - Admin')
 
 @section('content')
 <div class="page-header">
     <div class="header-content">
-        <h1>👨‍🏫 Quản lý Giảng viên</h1>
-        <p>Quản lý thông tin các giảng viên dạy lớp học</p>
+        <h1>👥 Quản lý Học viên</h1>
+        <p>Quản lý thông tin các học viên đăng ký lớp học</p>
     </div>
     <div class="header-actions">
-        <a href="{{ route('admin.teachers.create') }}" class="create-btn">
-            ➕ Thêm giảng viên mới
+        <a href="{{ route('admin.customers.create') }}" class="create-btn">
+            ➕ Thêm học viên mới
         </a>
     </div>
 </div>
@@ -27,65 +27,68 @@
     </div>
 @endif
 
-<div class="teachers-container">
-    @forelse($teachers as $teacher)
-        <div class="teacher-card">
-            <div class="teacher-main">
-                <div class="teacher-info">
-                    <div class="teacher-avatar">
-                        {{ substr($teacher->name, 0, 1) }}
+<div class="customers-container">
+    @forelse($customers as $customer)
+        <div class="customer-card">
+            <div class="customer-main">
+                <div class="customer-info">
+                    <div class="customer-avatar">
+                        {{ substr($customer->name, 0, 1) }}
                     </div>
-                    <div class="teacher-details">
-                        <h3>{{ $teacher->name }}</h3>
+                    <div class="customer-details">
+                        <h3>{{ $customer->name }}</h3>
                         <div class="detail-item">
                             <span class="detail-icon">📧</span>
-                            <span>{{ $teacher->email }}</span>
+                            <span>{{ $customer->email }}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-icon">📱</span>
-                            <span>{{ $teacher->phone }}</span>
+                            <span>{{ $customer->phone }}</span>
                         </div>
-                        <div class="detail-item">
-                            <span class="detail-icon">🎓</span>
-                            <span>{{ $teacher->exp_year }} năm kinh nghiệm</span>
-                        </div>
-                        @if($teacher->description)
-                            <div class="teacher-description">
-                                {{ Str::limit($teacher->description, 100) }}
+                        @if($customer->address)
+                            <div class="detail-item">
+                                <span class="detail-icon">🏠</span>
+                                <span>{{ Str::limit($customer->address, 50) }}</span>
                             </div>
                         @endif
                         <div class="detail-item">
                             <span class="detail-icon">📅</span>
-                            <span>Gia nhập: {{ $teacher->created_at->format('d/m/Y') }}</span>
+                            <span>Tham gia: {{ $customer->created_at->format('d/m/Y') }}</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="teacher-stats">
+                <div class="customer-stats">
                     <div class="stat-item">
-                        <div class="stat-number">{{ $teacher->classes_count ?? 0 }}</div>
-                        <div class="stat-label">Lớp đang dạy</div>
+                        <div class="stat-number">{{ $customer->registrations_count ?? 0 }}</div>
+                        <div class="stat-label">Lớp đã đăng ký</div>
                     </div>
-                    @if($teacher->birthday)
+                    @if($customer->birthday)
                         <div class="detail-item">
                             <span class="detail-icon">🎂</span>
-                            <span>{{ \Carbon\Carbon::parse($teacher->birthday)->format('d/m/Y') }}</span>
+                            <span>{{ \Carbon\Carbon::parse($customer->birthday)->format('d/m/Y') }}</span>
+                        </div>
+                    @endif
+                    @if($customer->gender)
+                        <div class="detail-item">
+                            <span class="detail-icon">{{ $customer->gender === 'male' ? '👨' : '👩' }}</span>
+                            <span>{{ $customer->gender === 'male' ? 'Nam' : 'Nữ' }}</span>
                         </div>
                     @endif
                 </div>
             </div>
             
-            <div class="teacher-actions">
-                <a href="{{ route('admin.teachers.detail', $teacher) }}" class="action-btn view-btn">
+            <div class="customer-actions">
+                <a href="{{ route('admin.customers.detail', $customer) }}" class="action-btn view-btn">
                     👁️ Xem chi tiết
                 </a>
-                <a href="{{ route('admin.teachers.edit', $teacher) }}" class="action-btn edit-btn">
+                <a href="{{ route('admin.customers.edit', $customer) }}" class="action-btn edit-btn">
                     ✏️ Chỉnh sửa
                 </a>
-                <form method="POST" action="{{ route('admin.teachers.delete', $teacher) }}" style="display: inline;">
+                <form method="POST" action="{{ route('admin.customers.delete', $customer) }}" style="display: inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa giảng viên này? Tất cả lớp học liên quan cũng sẽ bị ảnh hưởng!')">
+                    <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa học viên này? Tất cả đăng ký liên quan cũng sẽ bị xóa!')">
                         🗑️ Xóa
                     </button>
                 </form>
@@ -93,19 +96,19 @@
         </div>
     @empty
         <div class="empty-state">
-            <div class="empty-icon">👨‍🏫</div>
-            <h3>Chưa có giảng viên nào</h3>
-            <p>Thêm giảng viên đầu tiên để bắt đầu tạo lớp học</p>
-            <a href="{{ route('admin.teachers.create') }}" class="create-btn">
-                ➕ Thêm giảng viên đầu tiên
+            <div class="empty-icon">👥</div>
+            <h3>Chưa có học viên nào</h3>
+            <p>Thêm học viên đầu tiên để bắt đầu quản lý</p>
+            <a href="{{ route('admin.customers.create') }}" class="create-btn">
+                ➕ Thêm học viên đầu tiên
             </a>
         </div>
     @endforelse
 </div>
 
-@if($teachers->hasPages())
+@if($customers->hasPages())
     <div class="pagination-wrapper">
-        {{ $teachers->links() }}
+        {{ $customers->links() }}
     </div>
 @endif
 
@@ -167,13 +170,13 @@
     border: 1px solid #f5c6cb;
 }
 
-.teachers-container {
+.customers-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.teacher-card {
+.customer-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -181,11 +184,11 @@
     transition: transform 0.2s;
 }
 
-.teacher-card:hover {
+.customer-card:hover {
     transform: translateY(-2px);
 }
 
-.teacher-main {
+.customer-main {
     padding: 25px;
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -193,17 +196,17 @@
     align-items: start;
 }
 
-.teacher-info {
+.customer-info {
     display: flex;
     align-items: flex-start;
     gap: 15px;
 }
 
-.teacher-avatar {
+.customer-avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: #fd7e14;
+    background: #667eea;
     color: white;
     display: flex;
     align-items: center;
@@ -213,7 +216,7 @@
     flex-shrink: 0;
 }
 
-.teacher-details h3 {
+.customer-details h3 {
     margin: 0 0 10px 0;
     color: #333;
     font-size: 1.3rem;
@@ -233,17 +236,7 @@
     text-align: center;
 }
 
-.teacher-description {
-    margin: 10px 0;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    color: #666;
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-.teacher-stats {
+.customer-stats {
     text-align: right;
 }
 
@@ -267,7 +260,7 @@
     font-size: 0.85rem;
 }
 
-.teacher-actions {
+.customer-actions {
     padding: 15px 25px;
     background: #f8f9fa;
     border-top: 1px solid #dee2e6;
@@ -354,15 +347,15 @@
         gap: 20px;
     }
     
-    .teacher-main {
+    .customer-main {
         grid-template-columns: 1fr;
     }
     
-    .teacher-stats {
+    .customer-stats {
         text-align: left;
     }
     
-    .teacher-actions {
+    .customer-actions {
         flex-direction: column;
     }
     
