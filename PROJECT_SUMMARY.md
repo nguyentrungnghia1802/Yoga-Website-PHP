@@ -4,7 +4,7 @@
 
 **Tên dự án:** Hệ thống quản lý trung tâm Yoga/Gym  
 **Công nghệ:** Laravel 12, PHP 8.2+, MySQL, Vite, Tailwind CSS, Bootstrap  
-**Thời gian:** 8 tuần (01/2025 - 03/2025)  
+**Thời gian:** 8 tuần (07/2025 - 09/2025)  
 **Mục tiêu:** Phát triển hệ thống quản lý toàn diện cho trung tâm Yoga/Gym với tính năng đăng ký lớp học, quản lý thành viên và admin
 
 ---
