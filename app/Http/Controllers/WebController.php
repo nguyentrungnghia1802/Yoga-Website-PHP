@@ -6,6 +6,7 @@ use App\Models\YogaClass;
 use App\Models\Teacher;
 use App\Models\Customer;
 use App\Models\Registration;
+use App\Enums\RegistrationStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,8 +64,11 @@ class WebController extends Controller
     }
     public function registeredClasses(Request $request)
     {
-        // For demo, show all registrations. In real app, filter by logged-in user.
-        $registrations = Registration::with(['class.teacher'])->get();
+        // Show only confirmed registrations. In real app, filter by logged-in user.
+        $registrations = Registration::with(['class.teacher'])
+                                   ->where('status', RegistrationStatus::CONFIRMED->value)
+                                   ->latest()
+                                   ->get();
         return view('pages.registered_classes', compact('registrations'));
     }
 

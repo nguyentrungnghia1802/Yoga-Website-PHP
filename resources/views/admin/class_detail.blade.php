@@ -75,7 +75,10 @@
                             {{ substr($registration->customer->name, 0, 1) }}
                         </div>
                         <div class="student-info">
-                            <div class="student-name">{{ $registration->customer->name }}</div>
+                            <div class="student-name">
+                                {{ $registration->customer->name }}
+                                <span class="status-badge confirmed">✅ Đã xác nhận</span>
+                            </div>
                             <div class="student-contact">
                                 📧 {{ $registration->customer->email }} | 
                                 📱 {{ $registration->customer->phone }}
@@ -87,7 +90,7 @@
                     </div>
                 @empty
                     <div class="empty-state">
-                        <p>📭 Chưa có học viên nào đăng ký lớp học này</p>
+                        <p>📭 Chưa có học viên nào được xác nhận tham gia lớp học này</p>
                     </div>
                 @endforelse
             </div>
@@ -219,6 +222,21 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.status-badge.confirmed {
+    background: #d4edda;
+    color: #155724;
 }
 
 .student-contact {
