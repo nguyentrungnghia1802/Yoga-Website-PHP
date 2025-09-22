@@ -95,7 +95,7 @@ Visit `http://localhost:8000` to access the application.
 ### Default Admin Account
 ```
 Username: admin
-Password: admin123
+Password: 123456
 ```
 
 ### Registration Flow
