@@ -11,6 +11,8 @@ Route::get('/classes/{id}', [WebController::class, 'classDetail'])->name('class.
 Route::get('/register', [WebController::class, 'register'])->name('register');
 Route::post('/register', [WebController::class, 'registerSubmit'])->name('register.submit');
 Route::get('/authors', [WebController::class, 'authors'])->name('authors');
+Route::get('/registered-classes', [WebController::class, 'registeredClasses'])->name('registered.classes');
+Route::get('/registered-classes/{id}', [WebController::class, 'registeredClassDetail'])->name('registered.class.detail');
 
 // Admin routes with authentication
 Route::prefix('admin')->name('admin.')->group(function () {

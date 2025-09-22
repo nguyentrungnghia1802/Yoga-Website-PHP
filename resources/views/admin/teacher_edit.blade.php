@@ -1,20 +1,20 @@
 @extends('layouts.admin')
 
-@section('title', 'Chỉnh sửa Học viên - Admin')
+@section('title', 'Chỉnh sửa Giảng viên - Admin')
 
 @section('content')
 <div class="page-header">
     <div class="header-navigation">
-        <a href="{{ route('admin.customers') }}" class="back-btn">
+        <a href="{{ route('admin.teachers') }}" class="back-btn">
             ← Quay lại danh sách
         </a>
-        <a href="{{ route('admin.customers.detail', $customer->id) }}" class="view-btn">
+        <a href="{{ route('admin.teachers.detail', $teacher->id) }}" class="view-btn">
             👁️ Xem chi tiết
         </a>
     </div>
     <div class="header-content">
-        <h1>✏️ Chỉnh sửa Học viên</h1>
-        <p>Cập nhật thông tin: <strong>{{ $customer->name }}</strong></p>
+        <h1>✏️ Chỉnh sửa Giảng viên</h1>
+        <p>Cập nhật thông tin: <strong>{{ $teacher->name }}</strong></p>
     </div>
 </div>
 
@@ -36,56 +36,58 @@
 @endif
 
 <div class="form-container">
-    <form method="POST" action="{{ route('admin.customers.update', $customer->id) }}">
+    <form method="POST" action="{{ route('admin.teachers.update', $teacher->id) }}">
         @csrf
         @method('PUT')
         
         <div class="form-grid">
             <div class="form-group">
-                <label for="name">👤 Tên học viên <span class="required">*</span></label>
-                <input type="text" id="name" name="name" value="{{ old('name', $customer->name) }}" required>
+                <label for="name">👤 Tên giảng viên <span class="required">*</span></label>
+                <input type="text" id="name" name="name" value="{{ old('name', $teacher->name) }}" required>
             </div>
 
             <div class="form-group">
                 <label for="email">📧 Email <span class="required">*</span></label>
-                <input type="email" id="email" name="email" value="{{ old('email', $customer->email) }}" required>
+                <input type="email" id="email" name="email" value="{{ old('email', $teacher->email) }}" required>
             </div>
 
             <div class="form-group">
                 <label for="phone">📱 Số điện thoại <span class="required">*</span></label>
-                <input type="text" id="phone" name="phone" value="{{ old('phone', $customer->phone) }}" required>
+                <input type="text" id="phone" name="phone" value="{{ old('phone', $teacher->phone) }}" required>
             </div>
 
             <div class="form-group">
                 <label for="birthday">🎂 Ngày sinh</label>
-                <input type="date" id="birthday" name="birthday" value="{{ old('birthday', $customer->birthday ? $customer->birthday->format('Y-m-d') : '') }}">
+                <input type="date" id="birthday" name="birthday" value="{{ old('birthday', $teacher->birthday ? $teacher->birthday->format('Y-m-d') : '') }}">
             </div>
 
             <div class="form-group">
-                <label for="gender">👥 Giới tính</label>
-                <select id="gender" name="gender">
-                    <option value="">-- Chọn giới tính --</option>
-                    <option value="male" {{ old('gender', $customer->gender) == 'male' ? 'selected' : '' }}>Nam</option>
-                    <option value="female" {{ old('gender', $customer->gender) == 'female' ? 'selected' : '' }}>Nữ</option>
-                </select>
+                <label for="exp_year">📈 Số năm kinh nghiệm <span class="required">*</span></label>
+                <input type="number" id="exp_year" name="exp_year" value="{{ old('exp_year', $teacher->exp_year) }}" min="0" required>
             </div>
 
-            <div class="form-group full-width">
-                <label for="address">🏠 Địa chỉ</label>
-                <input type="text" id="address" name="address" value="{{ old('address', $customer->address) }}">
+            <div class="form-group">
+                <label for="level">🏆 Trình độ</label>
+                <select id="level" name="level">
+                    <option value="">-- Chọn trình độ --</option>
+                    <option value="Beginner" {{ old('level', $teacher->level) == 'Beginner' ? 'selected' : '' }}>Beginner</option>
+                    <option value="Intermediate" {{ old('level', $teacher->level) == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                    <option value="Advanced" {{ old('level', $teacher->level) == 'Advanced' ? 'selected' : '' }}>Advanced</option>
+                    <option value="Expert" {{ old('level', $teacher->level) == 'Expert' ? 'selected' : '' }}>Expert</option>
+                </select>
             </div>
         </div>
 
         <div class="form-group full-width">
-            <label for="note">📝 Ghi chú</label>
-            <textarea id="note" name="note" rows="4" placeholder="Ghi chú thêm về học viên...">{{ old('note', $customer->note) }}</textarea>
+            <label for="description">📝 Mô tả về giảng viên</label>
+            <textarea id="description" name="description" rows="4" placeholder="Mô tả về kinh nghiệm, chuyên môn của giảng viên...">{{ old('description', $teacher->description) }}</textarea>
         </div>
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">
-                💾 Cập nhật học viên
+                💾 Cập nhật giảng viên
             </button>
-            <a href="{{ route('admin.customers.detail', $customer->id) }}" class="btn btn-secondary">
+            <a href="{{ route('admin.teachers.detail', $teacher->id) }}" class="btn btn-secondary">
                 ❌ Hủy bỏ
             </a>
         </div>

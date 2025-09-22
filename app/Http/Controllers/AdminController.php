@@ -207,7 +207,7 @@ class AdminController extends Controller
         $class = YogaClass::with('teacher')->findOrFail($id);
         $registrations = Registration::with('customer')
                                    ->where('class_id', $id)
-                                   ->where('status', 'APPROVED')
+                                   ->where('status', RegistrationStatus::CONFIRMED->value)
                                    ->get();
         
         return view('admin.class_detail', compact('class', 'registrations'));
@@ -245,6 +245,14 @@ class AdminController extends Controller
     public function deleteClass($id)
     {
         $class = YogaClass::findOrFail($id);
+        
+        // Check if class has any registrations
+        $registrationCount = $class->registrations()->count();
+        if ($registrationCount > 0) {
+            return redirect()->route('admin.classes')
+                           ->with('error', "Không thể xóa lớp học {$class->name} vì đã có {$registrationCount} học viên đăng ký. Vui lòng hủy các đăng ký trước.");
+        }
+        
         $class->delete();
         
         return redirect()->route('admin.classes')->with('success', 'Đã xóa lớp học thành công!');
@@ -330,6 +338,14 @@ class AdminController extends Controller
     public function deleteCustomer($id)
     {
         $customer = Customer::findOrFail($id);
+        
+        // Check if customer has any registrations
+        $registrationCount = $customer->registrations()->count();
+        if ($registrationCount > 0) {
+            return redirect()->route('admin.customers')
+                           ->with('error', "Không thể xóa học viên {$customer->name} vì đã có {$registrationCount} lượt đăng ký lớp học. Vui lòng xóa các đăng ký trước.");
+        }
+        
         $customer->delete();
         
         return redirect()->route('admin.customers')->with('success', 'Đã xóa học viên thành công!');
@@ -412,6 +428,14 @@ class AdminController extends Controller
     public function deleteTeacher($id)
     {
         $teacher = Teacher::findOrFail($id);
+        
+        // Check if teacher has any classes
+        $classCount = $teacher->classes()->count();
+        if ($classCount > 0) {
+            return redirect()->route('admin.teachers')
+                           ->with('error', "Không thể xóa giảng viên {$teacher->name} vì đang dạy {$classCount} lớp học. Vui lòng chuyển các lớp học cho giảng viên khác trước.");
+        }
+        
         $teacher->delete();
         
         return redirect()->route('admin.teachers')->with('success', 'Đã xóa giảng viên thành công!');    
