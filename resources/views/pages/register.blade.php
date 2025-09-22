@@ -58,7 +58,6 @@
             </div>
             <button type="submit" class="btn btn-primary btn-full">🎯 Đăng ký ngay</button>
         </form>
-        <div id="registerResult" style="margin-top:20px;"></div>
         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
             <!-- Đã có tài khoản? Đăng nhập ngay (Admin) removed for user registration form -->
         </div>
@@ -66,48 +65,25 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-document.getElementById('registerForm').onsubmit = async function(e) {
-    e.preventDefault();
-    const form = e.target;
-    const resultDiv = document.getElementById('registerResult');
-    resultDiv.innerHTML = '';
-    const data = {
-        customer: {
-            name: form.name.value,
-            email: form.email.value,
-            phone: form.phone.value
-        },
-        class_id: form.class_id.value,
-        note: form.notes.value,
-        package_months: 1,
-        start_date: form.start_date.value,
-        experience: form.experience.value,
-        terms: form.terms.checked,
-        newsletter: form.newsletter.checked,
-        idempotency_key: Date.now().toString() + Math.random().toString(36).slice(2)
-    };
-    try {
-        const res = await fetch('/api/registrations', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        if (res.ok) {
-            const json = await res.json();
-            resultDiv.innerHTML = '<div class="alert alert-success">Đăng ký thành công! Mã đăng ký: ' + json.data.id + '</div>';
-            form.reset();
-        } else {
-            const err = await res.json();
-            resultDiv.innerHTML = '<div class="alert alert-error">' + (err.message || 'Đăng ký thất bại!') + '</div>';
-        }
-    } catch (error) {
-        resultDiv.innerHTML = '<div class="alert alert-error">Lỗi hệ thống! Vui lòng thử lại sau.</div>';
-    }
-};
-</script>
-@endpush
+@if(session('success'))
+    <div class="alert alert-success" style="margin-top: 20px;">
+        ✅ {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-error" style="margin-top: 20px;">
+        ❌ {{ session('error') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="alert alert-error" style="margin-top: 20px;">
+        ❌ Vui lòng kiểm tra lại thông tin:
+        <ul style="margin: 10px 0 0 20px;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif

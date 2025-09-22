@@ -76,7 +76,8 @@ class WebController extends Controller
     {
         $class = YogaClass::with('teacher')->findOrFail($id);
         $members = Customer::whereHas('registrations', function($q) use ($id) {
-            $q->where('class_id', $id);
+            $q->where('class_id', $id)
+              ->where('status', RegistrationStatus::CONFIRMED->value);
         })->get();
         return view('pages.registered_class_detail', compact('class', 'members'));
     }
@@ -117,13 +118,13 @@ class WebController extends Controller
     {
         $class = YogaClass::with('teacher')->findOrFail($id);
         
-        // Get approved registrations for this class
-        $approvedRegistrations = Registration::with('customer')
+        // Get confirmed registrations for this class
+        $confirmedRegistrations = Registration::with('customer')
             ->where('class_id', $id)
-            ->where('status', 'APPROVED')
+            ->where('status', RegistrationStatus::CONFIRMED->value)
             ->get();
         
-        $registeredStudents = $approvedRegistrations->map(function($registration) {
+        $registeredStudents = $confirmedRegistrations->map(function($registration) {
             return $registration->customer;
         });
         
@@ -229,17 +230,27 @@ class WebController extends Controller
             'start_date' => 'required|date',
         ]);
 
-        // Create registration with PENDING status - DON'T create customer yet
-        // Store customer info in registration table for later processing
+        // Find or create customer
+        $customer = Customer::firstOrCreate(
+            ['email' => $request->email],
+            [
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'birthday' => $request->start_date, // Use start_date as birthday for now
+                'gender' => $request->gender ?? 'female',
+                'address' => null,
+                'note' => null,
+            ]
+        );
+
+        // Create registration with PENDING status
         $registration = Registration::create([
-            'customer_name' => $request->name,
-            'customer_email' => $request->email,
-            'customer_phone' => $request->phone,
+            'customer_id' => $customer->id,
             'class_id' => $request->class_id,
             'package_months' => $request->package_months ?? 1,
             'discount' => 0,
             'final_price' => YogaClass::find($request->class_id)->price,
-            'status' => 'PENDING',
+            'status' => RegistrationStatus::PENDING->value,
             'note' => $request->notes,
         ]);
 

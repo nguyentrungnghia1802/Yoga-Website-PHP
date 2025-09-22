@@ -51,17 +51,17 @@
             <div class="section-content">
                 <div class="customer-profile">
                     <div class="customer-avatar">
-                        {{ substr($registration->customer ? $registration->customer->name : $registration->customer_name, 0, 1) }}
+                        {{ substr($registration->customer->name ?? 'N/A', 0, 1) }}
                     </div>
                     <div class="customer-info">
-                        <h3>{{ $registration->customer ? $registration->customer->name : $registration->customer_name }}</h3>
+                        <h3>{{ $registration->customer->name ?? 'Không có thông tin' }}</h3>
                         <div class="info-row">
                             <span class="info-label">📧 Email:</span>
-                            <span class="info-value">{{ $registration->customer ? $registration->customer->email : $registration->customer_email }}</span>
+                            <span class="info-value">{{ $registration->customer->email ?? 'Không có email' }}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">📱 Điện thoại:</span>
-                            <span class="info-value">{{ $registration->customer ? $registration->customer->phone : $registration->customer_phone }}</span>
+                            <span class="info-value">{{ $registration->customer->phone ?? 'Không có SĐT' }}</span>
                         </div>
                         @if($registration->customer && $registration->customer->address)
                             <div class="info-row">

@@ -112,34 +112,10 @@ class AdminController extends Controller
     public function approveRegistration($id)
     {
         $registration = Registration::findOrFail($id);
-        
-        // Create customer when registration is approved
-        if (!$registration->customer_id) {
-            $customer = Customer::where('email', $registration->customer_email)
-                       ->orWhere('phone', $registration->customer_phone)
-                       ->first();
-            
-            if (!$customer) {
-                $customer = Customer::create([
-                    'name' => $registration->customer_name,
-                    'email' => $registration->customer_email,
-                    'phone' => $registration->customer_phone,
-                    'birthday' => null,
-                    'gender' => null,
-                    'address' => null,
-                ]);
-            }
-            
-            $registration->update([
-                'customer_id' => $customer->id,
-                'status' => RegistrationStatus::CONFIRMED
-            ]);
-        } else {
-            $registration->update(['status' => RegistrationStatus::CONFIRMED]);
-        }
+        $registration->update(['status' => RegistrationStatus::CONFIRMED]);
         
         return redirect()->route('admin.registrations')
-                        ->with('success', 'Đã phê duyệt đăng ký #' . $id . ' và tạo học viên thành công!');
+                        ->with('success', 'Đã phê duyệt đăng ký #' . $id . ' thành công!');
     }
 
     public function rejectRegistration($id)
