@@ -50,12 +50,12 @@
             <div class="registration-main">
                 <div class="customer-info">
                     <div class="customer-avatar">
-                        {{ substr($registration->customer ? $registration->customer->name : $registration->customer_name, 0, 1) }}
+                        {{ substr($registration->customer->name ?? 'N/A', 0, 1) }}
                     </div>
                     <div class="customer-details">
-                        <h3>{{ $registration->customer ? $registration->customer->name : $registration->customer_name }}</h3>
-                        <p>📧 {{ $registration->customer ? $registration->customer->email : $registration->customer_email }}</p>
-                        <p>📱 {{ $registration->customer ? $registration->customer->phone : $registration->customer_phone }}</p>
+                        <h3>{{ $registration->customer->name ?? 'Không có thông tin' }}</h3>
+                        <p>📧 {{ $registration->customer->email ?? 'Không có email' }}</p>
+                        <p>📱 {{ $registration->customer->phone ?? 'Không có SĐT' }}</p>
                     </div>
                 </div>
                 
