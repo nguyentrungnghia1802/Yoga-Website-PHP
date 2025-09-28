@@ -169,7 +169,7 @@
         <div class="demo-info">
             <strong>💡 Demo Account:</strong><br>
             Tên đăng nhập: <code>admin</code><br>
-            Mật khẩu: <code>password</code>
+            Mật khẩu: <code>123456</code>
         </div>
 
         <div class="login-footer">
