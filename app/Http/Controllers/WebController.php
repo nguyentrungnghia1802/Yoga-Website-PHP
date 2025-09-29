@@ -145,11 +145,12 @@ class WebController extends Controller
         return view('pages.members', compact('customers'));
     }
 
-    public function register()
+    public function register(Request $request)
     {
         $classes = YogaClass::with('teacher')->get();
         $customers = Customer::get();
-        return view('pages.register', compact('classes', 'customers'));
+        $selectedClassId = $request->get('class_id');
+        return view('pages.register', compact('classes', 'customers', 'selectedClassId'));
     }
 
     public function contact()

@@ -26,7 +26,8 @@
                 <select id="className" name="class_id" required>
                     <option value="">-- Chọn lớp học --</option>
                     @foreach($classes as $class)
-                        <option value="{{ $class->id }}" data-price="{{ $class->price }}">
+                        <option value="{{ $class->id }}" data-price="{{ $class->price }}" 
+                                {{ isset($selectedClassId) && $selectedClassId == $class->id ? 'selected' : '' }}>
                             {{ $class->name }} - {{ $class->start_time }} - {{ $class->end_time }} ({{ number_format($class->price, 0, ',', '.') }}₫)
                         </option>
                     @endforeach
@@ -64,6 +65,30 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Hiển thị thông báo nếu có lớp học được chọn sẵn
+    @if(isset($selectedClassId) && $selectedClassId)
+        const selectedClass = document.querySelector('#className option[value="{{ $selectedClassId }}"]');
+        if (selectedClass) {
+            // Hiển thị thông báo nhỏ
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-info';
+            alert.style.cssText = 'background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; padding: 10px; border-radius: 8px; margin-bottom: 15px;';
+            alert.innerHTML = '✅ Đã chọn lớp học: <strong>' + selectedClass.textContent + '</strong>';
+            
+            const form = document.getElementById('registerForm');
+            form.insertBefore(alert, form.firstChild);
+            
+            // Tự động focus vào trường tên
+            document.getElementById('fullname').focus();
+        }
+    @endif
+});
+</script>
+@endpush
 
 @if(session('success'))
     <div class="alert alert-success" style="margin-top: 20px;">
