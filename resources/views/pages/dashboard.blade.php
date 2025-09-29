@@ -30,18 +30,18 @@
 
 <section class="card">
     <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Tại sao chọn chúng tôi?</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        <div style="text-align: center;">
-            <h4>🏆 Kinh nghiệm 10+ năm</h4>
-            <p>Hơn 10 năm hoạt động và phát triển trong lĩnh vực Yoga/Gym</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+        <div style="text-align: center; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 20px; background: rgba(102, 126, 234, 0.05); border-radius: 12px;">
+            <h4 style="color: #667eea; margin-bottom: 12px; font-size: 1.2rem;">🏆 Kinh nghiệm 10+ năm</h4>
+            <p style="color: #666; line-height: 1.3; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hơn 10 năm hoạt động và phát triển trong lĩnh vực Yoga/Gym</p>
         </div>
-        <div style="text-align: center;">
-            <h4>👥 Cộng đồng 1000+ thành viên</h4>
-            <p>Gia nhập cộng đồng những người yêu thích sức khỏe và thể thao</p>
+        <div style="text-align: center; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 20px; background: rgba(102, 126, 234, 0.05); border-radius: 12px;">
+            <h4 style="color: #667eea; margin-bottom: 12px; font-size: 1.2rem;">👥 Cộng đồng 1000+ thành viên</h4>
+            <p style="color: #666; line-height: 1.3; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Gia nhập cộng đồng những người yêu thích sức khỏe và thể thao</p>
         </div>
-        <div style="text-align: center;">
-            <h4>💰 Giá cả hợp lý</h4>
-            <p>Các gói tập đa dạng với mức giá phù hợp mọi đối tượng</p>
+        <div style="text-align: center; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 20px; background: rgba(102, 126, 234, 0.05); border-radius: 12px;">
+            <h4 style="color: #667eea; margin-bottom: 12px; font-size: 1.2rem;">💰 Giá cả hợp lý</h4>
+            <p style="color: #666; line-height: 1.3; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Các gói tập đa dạng với mức giá phù hợp mọi đối tượng</p>
         </div>
     </div>
 </section>

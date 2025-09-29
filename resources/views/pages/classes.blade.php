@@ -30,8 +30,8 @@
             </span>
         </div>
         <div style="margin-top: 10px; display: flex; gap: 10px;">
-            <a href="{{ route('class.detail', $class->id) }}" class="btn" style="flex: 1; background: #f8f9fa; color: #495057; text-align: center;">👁️ Xem chi tiết</a>
-            <a href="{{ route('register') }}" class="btn btn-primary" style="flex: 1; text-align: center;">📝 Đăng ký</a>
+            <a href="{{ route('class.detail', $class->id) }}" class="btn" style="flex: 1; background: #f8f9fa; color: #495057; text-align: center; white-space: nowrap; padding: 8px 12px;">👁️ Xem chi tiết</a>
+            <a href="{{ route('register', ['class_id' => $class->id]) }}" class="btn btn-primary" style="flex: 1; text-align: center; white-space: nowrap; padding: 8px 12px;">📝 Đăng ký</a>
         </div>
     </div>
     @endforeach
@@ -48,7 +48,7 @@
                 👥 15/20 học viên
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%; white-space: nowrap; padding: 10px 15px;">📝 Đăng ký ngay</a>
     </div>
     
     <div class="class-card">
@@ -61,7 +61,7 @@
                 👥 18/20 học viên
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%; white-space: nowrap; padding: 10px 15px;">📝 Đăng ký ngay</a>
     </div>
     
     <div class="class-card">
@@ -74,7 +74,7 @@
                 👥 Không giới hạn
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%; white-space: nowrap; padding: 10px 15px;">📝 Đăng ký ngay</a>
     </div>
     
     <div class="class-card">
@@ -87,7 +87,7 @@
                 👥 10/15 học viên
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%; white-space: nowrap; padding: 10px 15px;">📝 Đăng ký ngay</a>
     </div>
     
     <div class="class-card">
@@ -100,7 +100,7 @@
                 👥 8/12 học viên
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%; white-space: nowrap; padding: 10px 15px;">📝 Đăng ký ngay</a>
     </div>
     
     <div class="class-card">
@@ -113,7 +113,7 @@
                 👥 12/18 học viên
             </span>
         </div>
-        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Đăng ký ngay</a>
+        <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top: 15px; width: 100%; white-space: nowrap; padding: 10px 15px;">📝 Đăng ký ngay</a>
     </div>
     @endif
 </div>
