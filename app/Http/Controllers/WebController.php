@@ -162,40 +162,12 @@ class WebController extends Controller
     {
         $authors = [
             [
-                'avatar' => '👩‍💼',
-                'name' => 'Nguyễn Thị Cẩm Tú',
-                'role' => 'Trưởng nhóm - Frontend (User site)',
-                'id' => 'K23DTCN549',
-                'task' => 'Develop UI for user site, integrate with API (listen for trigger)'
-            ],
-            [
-                'avatar' => '👨‍💻',
-                'name' => 'Hoàng Trọng Lực',
-                'role' => 'Frontend (Admin site)',
-                'id' => 'K23DTCN542',
-                'task' => 'Develop UI for admin site, integrate with API'
-            ],
-            [
-                'avatar' => '👩‍💻',
-                'name' => 'Nguyễn Thị Thu Hương',
-                'role' => 'Backend (User + Admin), DB Design',
-                'id' => 'K23DTCN539',
-                'task' => 'Develop backend APIs for both admin and user site, design DB'
-            ],
-            [
-                'avatar' => '👨‍💻',
-                'name' => 'Vũ Huy Năng',
-                'role' => 'Frontend (User site)',
-                'id' => 'K23DTCN543',
-                'task' => 'Develop UI for user site, integrate with API'
-            ],
-            [
-                'avatar' => '👨‍💻',
-                'name' => 'Nguyễn Trung Hiếu',
-                'role' => 'Frontend (Admin site)',
-                'id' => 'K23DTCN536',
-                'task' => 'Develop UI for admin site, integrate with API'
-            ],
+                'avatar' => '👦',
+                'name' => 'Nguyễn Trung Nghĩa',
+                'role' => 'Developer',
+                'id' => '',
+                'task' => '<a href="https://github.com/nguyentrungnghia1802" target="_blank">GitHub</a> | <a href="https://nguyentrungnghia1802.github.io/Profile/" target="_blank">Profile</a>'
+            ]
         ];
         $project = [
             'weeks' => 8,
@@ -203,7 +175,7 @@ class WebController extends Controller
             'files' => 50,
             'lines' => 1000,
             'goal' => 'Phát triển một hệ thống quản lý trung tâm Yoga/Gym toàn diện, hỗ trợ đăng ký lớp học, quản lý thành viên, và các tính năng quản trị cho nhân viên. Hệ thống được thiết kế với giao diện thân thiện và dễ sử dụng.',
-            'tech' => ['Java','JSP/Servlet','HTML5','CSS3','JavaScript','MySQL','Bootstrap'],
+            'tech' => ['Laravel','Blade','HTML5','CSS3','JavaScript','MySQL','Bootstrap'],
             'period' => '8 tuần, từ tháng 1 đến tháng 3 năm 2025',
             'context' => 'Đây là đồ án cuối kỳ môn "Lập trình Web" thuộc chương trình Công nghệ Thông tin. Dự án được thực hiện dưới sự hướng dẫn của giảng viên và áp dụng các kiến thức đã học trong suốt khóa học.'
         ];
