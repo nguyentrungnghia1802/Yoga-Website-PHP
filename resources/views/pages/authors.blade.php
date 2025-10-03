@@ -2,46 +2,20 @@
 @section('content')
 <div class="container">
     <div class="authors-intro">
-        <h1>👥 Thành viên nhóm phát triển</h1>
-        <p>Danh sách thành viên và nhiệm vụ chính của dự án Yoga/Gym Center.</p>
+        <h1>� Tác giả</h1>
+        <p>Thông tin tác giả dự án Yoga/Gym Center.</p>
     </div>
-    <div class="authors-row leader-row">
-        @php $leader = $authors[0]; @endphp
-        <div class="author-card horizontal">
-            <div class="author-avatar">{{ $leader['avatar'] }}</div>
-            <div class="author-info-block">
-                <div class="author-name">{{ $leader['name'] }}</div>
-                <div class="author-role">{{ $leader['role'] }}</div>
-                <div class="author-id">MSSV: {{ $leader['id'] }}</div>
-                <div class="author-task">{{ $leader['task'] }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="authors-row">
-        @foreach(array_slice($authors,1,2) as $author)
+    <div class="authors-row single-author-row">
+        @php $author = $authors[0]; @endphp
         <div class="author-card horizontal">
             <div class="author-avatar">{{ $author['avatar'] }}</div>
             <div class="author-info-block">
                 <div class="author-name">{{ $author['name'] }}</div>
                 <div class="author-role">{{ $author['role'] }}</div>
-                <div class="author-id">MSSV: {{ $author['id'] }}</div>
-                <div class="author-task">{{ $author['task'] }}</div>
+                @if($author['id'])<div class="author-id">MSSV: {{ $author['id'] }}</div>@endif
+                <div class="author-task">{!! $author['task'] !!}</div>
             </div>
         </div>
-        @endforeach
-    </div>
-    <div class="authors-row">
-        @foreach(array_slice($authors,3,2) as $author)
-        <div class="author-card horizontal">
-            <div class="author-avatar">{{ $author['avatar'] }}</div>
-            <div class="author-info-block">
-                <div class="author-name">{{ $author['name'] }}</div>
-                <div class="author-role">{{ $author['role'] }}</div>
-                <div class="author-id">MSSV: {{ $author['id'] }}</div>
-                <div class="author-task">{{ $author['task'] }}</div>
-            </div>
-        </div>
-        @endforeach
     </div>
     <div class="project-info">
         <h2>🎯 Về dự án Yoga/Gym Center</h2>
