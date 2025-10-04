@@ -18,7 +18,7 @@ class UnifiedRegistrationRequest extends FormRequest
     {
         return [
             'class_id'       => ['required', 'exists:classes,id'],
-            'package_months' => ['required', 'in:1,3,6,12'],
+            // 'package_months' => ['required', 'in:1,3,6,12'],
             'note'           => ['nullable', 'string', 'max:255'],
 
             'customer_id'         => ['nullable', 'exists:customers,id'],
@@ -40,7 +40,7 @@ class UnifiedRegistrationRequest extends FormRequest
         return [
             'class_id.required'          => 'Thiếu class_id.',
             'class_id.exists'            => 'Lớp không tồn tại.',
-            'package_months.in'          => 'Gói tháng chỉ nhận 1, 3, 6 hoặc 12.',
+            // 'package_months.in'          => 'Gói tháng chỉ nhận 1, 3, 6 hoặc 12.',
             'customer_id.exists'         => 'Khách hàng không tồn tại.',
             'customer.name.required_without'   => 'Tên khách hàng là bắt buộc khi không có customer_id.',
             'customer.phone.required_without'  => 'Số điện thoại là bắt buộc khi không có customer_id.',

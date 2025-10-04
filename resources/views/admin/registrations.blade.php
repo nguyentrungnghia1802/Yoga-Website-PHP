@@ -5,7 +5,7 @@
 @section('content')
 <div class="page-header">
     <div class="header-content">
-        <h1>📝 Quản lý Đăng ký</h1>
+        <h1><i class="fas fa-file-alt"></i> Quản lý Đăng ký</h1>
         <p>Duyệt và quản lý các đăng ký lớp học</p>
     </div>
     <div class="header-actions">
@@ -15,32 +15,36 @@
                 <button type="submit" class="search-btn">Tìm kiếm</button>
             </form>
         </div>
-        <div class="filter-buttons">
-            <a href="{{ route('admin.registrations') }}" class="filter-btn {{ request('status') == '' ? 'active' : '' }}">
-                Tất cả
-            </a>
-            <a href="{{ route('admin.registrations', ['status' => 'pending']) }}" class="filter-btn {{ request('status') == 'pending' ? 'active' : '' }}">
-                Chờ duyệt ({{ $stats['pending'] ?? 0 }})
-            </a>
-            <a href="{{ route('admin.registrations', ['status' => 'confirmed']) }}" class="filter-btn {{ request('status') == 'confirmed' ? 'active' : '' }}">
-                Đã duyệt ({{ $stats['approved'] ?? 0 }})
-            </a>
-            <a href="{{ route('admin.registrations', ['status' => 'cancelled']) }}" class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}">
-                Từ chối ({{ $stats['rejected'] ?? 0 }})
-            </a>
-        </div>
+        <a href="{{ route('admin.registrations.create') }}" class="create-btn">
+            <i class="fas fa-plus"></i> Tạo đơn đăng ký
+        </a>
     </div>
+    <div class="filter-buttons">
+        <a href="{{ route('admin.registrations') }}" class="filter-btn {{ request('status') == '' ? 'active' : '' }}">
+            Tất cả
+        </a>
+        <a href="{{ route('admin.registrations', ['status' => 'pending']) }}" class="filter-btn {{ request('status') == 'pending' ? 'active' : '' }}">
+            Chờ duyệt ({{ $stats['pending'] ?? 0 }})
+        </a>
+        <a href="{{ route('admin.registrations', ['status' => 'confirmed']) }}" class="filter-btn {{ request('status') == 'confirmed' ? 'active' : '' }}">
+            Đã duyệt ({{ $stats['approved'] ?? 0 }})
+        </a>
+        <a href="{{ route('admin.registrations', ['status' => 'cancelled']) }}" class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}">
+            Từ chối ({{ $stats['rejected'] ?? 0 }})
+        </a>
+    </div>
+</div>
 </div>
 
 @if(session('success'))
     <div class="alert alert-success">
-        ✅ {{ session('success') }}
+        <i class="fas fa-check-circle"></i> {{ session('success') }}
     </div>
 @endif
 
 @if(session('error'))
     <div class="alert alert-error">
-        ❌ {{ session('error') }}
+        <i class="fas fa-times-circle"></i> {{ session('error') }}
     </div>
 @endif
 
@@ -54,40 +58,40 @@
                     </div>
                     <div class="customer-details">
                         <h3>{{ $registration->customer->name ?? 'Không có thông tin' }}</h3>
-                        <p>📧 {{ $registration->customer->email ?? 'Không có email' }}</p>
-                        <p>📱 {{ $registration->customer->phone ?? 'Không có SĐT' }}</p>
+                        <p><i class="fas fa-envelope"></i> {{ $registration->customer->email ?? 'Không có email' }}</p>
+                        <p><i class="fas fa-phone"></i> {{ $registration->customer->phone ?? 'Không có SĐT' }}</p>
                     </div>
                 </div>
                 
                 <div class="class-info">
-                    <h4>🧘‍♀️ {{ $registration->class->name }}</h4>
-                    <p>👨‍🏫 {{ $registration->class->teacher->name }}</p>
-                    <p>💰 {{ number_format($registration->class->price) }} VNĐ</p>
-                    <p>🕒 {{ $registration->class->schedule }}</p>
+                    <h4><i class="fas fa-dumbbell"></i> {{ $registration->class->name }}</h4>
+                    <p><i class="fas fa-chalkboard-teacher"></i> {{ $registration->class->teacher->name }}</p>
+                    <p><i class="fas fa-dollar-sign"></i> {{ number_format($registration->class->price) }} VNĐ</p>
+                    <p><i class="fas fa-clock"></i> {{ $registration->class->schedule }}</p>
                 </div>
                 
                 <div class="registration-meta">
                     <div class="status-badge status-{{ strtolower($registration->status->value) }}">
                         @switch($registration->status->value)
                             @case('PENDING')
-                                ⏳ Chờ duyệt
+                                <i class="fas fa-clock"></i> Chờ duyệt
                                 @break
                             @case('CONFIRMED')
-                                ✅ Đã duyệt
+                                <i class="fas fa-check-circle"></i> Đã duyệt
                                 @break
                             @case('CANCELLED')
-                                ❌ Từ chối
+                                <i class="fas fa-times-circle"></i> Từ chối
                                 @break
                             @default
-                                📝 {{ $registration->status->value }}
+                                <i class="fas fa-file-alt"></i> {{ $registration->status->value }}
                         @endswitch
                     </div>
                     <div class="registration-date">
-                        📅 {{ $registration->created_at->format('d/m/Y H:i') }}
+                        <i class="fas fa-calendar"></i> {{ $registration->created_at->format('d/m/Y H:i') }}
                     </div>
                     @if($registration->note)
                         <div class="registration-note">
-                            📝 {{ $registration->note }}
+                            <i class="fas fa-sticky-note"></i> {{ $registration->note }}
                         </div>
                     @endif
                 </div>
@@ -98,20 +102,20 @@
                     <form method="POST" action="{{ route('admin.registrations.approve', $registration->id) }}" style="display: inline;">
                         @csrf
                         <button type="submit" class="action-btn approve-btn" onclick="return confirm('Bạn có chắc muốn duyệt đăng ký này?')">
-                            ✅ Duyệt
+                            <i class="fas fa-check"></i> Duyệt
                         </button>
                     </form>
                     
                     <form method="POST" action="{{ route('admin.registrations.reject', $registration->id) }}" style="display: inline;">
                         @csrf
                         <button type="submit" class="action-btn reject-btn" onclick="return confirm('Bạn có chắc muốn từ chối đăng ký này?')">
-                            ❌ Từ chối
+                            <i class="fas fa-times"></i> Từ chối
                         </button>
                     </form>
                 @endif
                 
                 <a href="{{ route('admin.registrations.detail', $registration->id) }}" class="action-btn view-btn">
-                    👁️ Chi tiết
+                    <i class="fas fa-eye"></i> Chi tiết
                 </a>
                 
                 <!-- Xóa đăng ký: Route destroy chưa định nghĩa trong routes/web.php -->
@@ -159,6 +163,58 @@
 
 .header-actions {
     margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-form form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    width: 300px;
+    padding: 8px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.search-btn {
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-btn:hover {
+    background: #5a6fd8;
+}
+
+.create-btn {
+    background: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.create-btn:hover {
+    background: #218838;
+    color: white;
 }
 
 .header-content h1 {
@@ -176,6 +232,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    margin-top: 15px;
 }
 
 .filter-btn {

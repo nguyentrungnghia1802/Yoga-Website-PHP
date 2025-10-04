@@ -31,7 +31,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
         
         // Registration management
-        Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
+    Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
+    Route::get('/registrations/create', [AdminController::class, 'showCreateRegistration'])->name('registrations.create');
+    Route::post('/registrations/create', [AdminController::class, 'createRegistration']);
         Route::get('/registrations/{id}', [AdminController::class, 'registrationDetail'])->name('registrations.detail');
         Route::post('/registrations/{id}/approve', [AdminController::class, 'approveRegistration'])->name('registrations.approve');
         Route::post('/registrations/{id}/reject', [AdminController::class, 'rejectRegistration'])->name('registrations.reject');
