@@ -1,6 +1,0 @@
-<div class="pagination">
-    <%-- Sử dụng: include file="../components/pagination.jspf" --%>
-    <% for(int i=1;i<=pageCount;i++){ %>
-        <a href="?page=<%=i%>" class="<%= (i==currentPage)?"active":"" %>"><%=i%></a>
-    <% } %>
-</div>

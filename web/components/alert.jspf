@@ -1,7 +1,0 @@
-<%-- Hiển thị thông báo (success, error, info) --%>
-<% if(request.getAttribute("errorMsg") != null) { %>
-    <div class="alert alert-danger"><%= request.getAttribute("errorMsg") %></div>
-<% } %>
-<% if(request.getAttribute("successMsg") != null) { %>
-    <div class="alert alert-success"><%= request.getAttribute("successMsg") %></div>
-<% } %>
