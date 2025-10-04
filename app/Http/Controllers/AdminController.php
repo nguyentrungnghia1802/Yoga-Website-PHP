@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -14,6 +13,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    // Show create registration form (admin)
+    public function showCreateRegistration()
+    {
+        $classes = YogaClass::all();
+        return view('admin.registration_create', compact('classes'));
+    }
     // Show admin login page
     public function showLogin()
     {
@@ -71,10 +76,10 @@ class AdminController extends Controller
     }
 
     // Registration Management
+
     public function registrations(Request $request)
     {
         $query = Registration::with(['customer', 'class.teacher']);
-        
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -87,20 +92,73 @@ class AdminController extends Controller
                 });
             });
         }
-        
         if ($request->filled('status')) {
             $query->where('status', strtoupper($request->status));
         }
-        
         $registrations = $query->orderBy('created_at', 'desc')->paginate(15);
-        
         $stats = [
             'pending' => Registration::where('status', RegistrationStatus::PENDING->value)->count(),
             'approved' => Registration::where('status', RegistrationStatus::CONFIRMED->value)->count(),
             'rejected' => Registration::where('status', RegistrationStatus::CANCELLED->value)->count(),
         ];
-        
-        return view('admin.registrations', compact('registrations', 'stats'));
+        $customers = Customer::all();
+        $classes = YogaClass::all();
+        return view('admin.registrations', compact('registrations', 'stats', 'customers', 'classes'));
+    }
+
+    // Admin create registration (auto-confirmed)
+    public function createRegistration(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'class_id' => 'required|exists:classes,id',
+            'start_date' => 'required|date',
+            'notes' => 'nullable|string|max:255',
+        ]);
+
+        // Tìm customer theo email hoặc phone, nếu có thì update, nếu không thì tạo mới
+        $customer = Customer::where('email', $request->email)
+            ->orWhere('phone', $request->phone)
+            ->first();
+        if ($customer) {
+            $customer->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'birthday' => $request->start_date, // Use start_date as birthday for now
+                'gender' => $request->gender ?? 'female',
+                'address' => null,
+                'note' => null,
+            ]);
+        } else {
+            $customer = Customer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'birthday' => $request->start_date, // Use start_date as birthday for now
+                'gender' => $request->gender ?? 'female',
+                'address' => null,
+                'note' => null,
+            ]);
+        }
+
+    // Calculate pricing (no package_months, just class price)
+    $class = YogaClass::findOrFail($request->class_id);
+    $finalPrice = $class->price;
+
+        // Create registration with CONFIRMED status (auto-approved by admin)
+        $registration = Registration::create([
+            'customer_id' => $customer->id,
+            'class_id' => $request->class_id,
+            'package_months' => 1, // set mặc định 1 tháng
+            'discount' => 0, // set mặc định 0%
+            'final_price' => $finalPrice,
+            'status' => RegistrationStatus::CONFIRMED,
+            'note' => $request->notes,
+        ]);
+
+        return redirect()->route('admin.registrations')->with('success', 'Đã tạo đơn đăng ký thành công! Mã đăng ký: #' . $registration->id . ' (Tự động duyệt)');
     }
 
     public function registrationDetail($id)
@@ -415,5 +473,16 @@ class AdminController extends Controller
         $teacher->delete();
         
         return redirect()->route('admin.teachers')->with('success', 'Đã xóa giảng viên thành công!');    
+    }
+    // Helper for discount calculation (same as RegistrationController)
+    private function discountForMonths(int $months): int
+    {
+        return match($months) {
+            1 => 0,
+            3 => 5,
+            6 => 10,
+            12 => 20,
+            default => 0,
+        };
     }
 }

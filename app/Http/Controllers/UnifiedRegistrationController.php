@@ -15,7 +15,9 @@ class UnifiedRegistrationController extends Controller
 {
     public function store(UnifiedRegistrationRequest $request)
     {
-        $data = $request->validated();
+    $data = $request->validated();
+    // Nếu validation request vẫn require package_months thì bỏ qua, tự set mặc định hoặc không dùng
+    unset($data['package_months']);
 
         return DB::transaction(function () use ($data) {
 
@@ -48,11 +50,7 @@ class UnifiedRegistrationController extends Controller
 
 
             $class   = YogaClass::lockForUpdate()->findOrFail($data['class_id']);
-            $months  = (int) $data['package_months'];
-            $discount = match ($months) {
-                1 => 0, 3 => 5, 6 => 10, 12 => 20, default => 0,
-            };
-            $final = $class->price * $months * (1 - $discount / 100);
+            // Không còn package_months, discount, final_price. Giá lấy trực tiếp từ lớp học
 
 
             if (!empty($data['idempotency_key'])) {
@@ -65,9 +63,7 @@ class UnifiedRegistrationController extends Controller
             $reg = Registration::create([
                 'customer_id'    => $customer->id,
                 'class_id'       => $class->id,
-                'package_months' => $months,
-                'discount'       => $discount,
-                'final_price'    => $final,
+                // Không còn package_months, discount, final_price
                 'status'         => RegistrationStatus::PENDING->value,
                 'note'           => $data['note'] ?? null,
                 'idempotency_key'=> $data['idempotency_key'] ?? null,

@@ -1,2 +1,0 @@
-admin,admin123
-# Thêm tài khoản admin khác nếu muốn, mỗi dòng: username,password

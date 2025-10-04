@@ -1,4 +1,0 @@
-<%-- Modal hiển thị ảnh lớn, tái sử dụng cho các trang cần zoom ảnh --%>
-<div id="zoomModal" class="modal" onclick="closeZoom()">
-    <img id="zoomImg" src="" alt="Zoom">
-</div>
