@@ -11,7 +11,7 @@ class UpdateRegistrationRequest extends FormRequest
         return [
             'customer_id'    => ['sometimes','required','exists:customers,id'],
             'class_id'       => ['sometimes','required','exists:classes,id'],
-            'package_months' => ['sometimes','required','in:1,3,6,12'],
+            // 'package_months' => ['sometimes','required','in:1,3,6,12'],
             'note'           => ['nullable','string','max:255'],
         ];
     }

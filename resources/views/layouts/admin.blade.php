@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin - Yoga/Gym Center')</title>
     
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     @stack('styles')
@@ -16,28 +19,28 @@
         <nav class="admin-nav">
             <div class="nav-container">
                 <div class="nav-brand">
-                    <h2>🧘‍♀️ Admin Panel</h2>
+                    <h2><i class="fas fa-spa"></i> Admin Panel</h2>
                 </div>
                 <div class="nav-menu">
                     <a href="{{ route('admin.dashboard') }}" 
                        class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        📊 Dashboard
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                     <a href="{{ route('admin.registrations') }}" 
                        class="{{ request()->routeIs('admin.registrations*') ? 'active' : '' }}">
-                        📝 Đơn đăng ký
+                        <i class="fas fa-file-alt"></i> Đơn đăng ký
                     </a>
                     <a href="{{ route('admin.classes') }}" 
                        class="{{ request()->routeIs('admin.classes*') ? 'active' : '' }}">
-                        🧘‍♀️ Lớp học
+                        <i class="fas fa-dumbbell"></i> Lớp học
                     </a>
                     <a href="{{ route('admin.customers') }}" 
                        class="{{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
-                        👥 Học viên
+                        <i class="fas fa-users"></i> Học viên
                     </a>
                     <a href="{{ route('admin.teachers') }}" 
                        class="{{ request()->routeIs('admin.teachers*') ? 'active' : '' }}">
-                        👨‍🏫 Giảng viên
+                        <i class="fas fa-chalkboard-teacher"></i> Giảng viên
                     </a>
                 </div>
                 <div class="nav-user">

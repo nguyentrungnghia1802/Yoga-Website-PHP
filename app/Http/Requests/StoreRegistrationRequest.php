@@ -9,7 +9,7 @@ class StoreRegistrationRequest extends FormRequest
         return [
             'customer_id'    => ['required','exists:customers,id'],
             'class_id'       => ['required','exists:classes,id'],
-            'package_months' => ['required','in:1,3,6,12'],
+            // 'package_months' => ['required','in:1,3,6,12'],
             'note'           => ['nullable','string','max:255'],
         ];
     }
