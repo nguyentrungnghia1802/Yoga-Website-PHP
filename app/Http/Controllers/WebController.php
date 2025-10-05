@@ -167,7 +167,7 @@ class WebController extends Controller
                 'role' => 'Trưởng nhóm - Frontend (User site)',
                 'id' => 'K23DTCN549',
                 'task' => 'Develop UI for user site, integrate with API (listen for trigger)',
-                'image' => 'https://via.placeholder.com/150x150/667eea/ffffff?text=CTU'
+                'image' => 'tu.jpg'
             ],
             [
                 'avatar' => '👨‍💻',
@@ -175,7 +175,7 @@ class WebController extends Controller
                 'role' => 'Frontend (Admin site)',
                 'id' => 'K23DTCN542',
                 'task' => 'Develop UI for admin site, integrate with API',
-                'image' => 'https://via.placeholder.com/150x150/764ba2/ffffff?text=HTL'
+                'image' => 'luc.jpg'
             ],
             [
                 'avatar' => '👩‍💻',
@@ -183,7 +183,7 @@ class WebController extends Controller
                 'role' => 'Backend (User + Admin), DB Design',
                 'id' => 'K23DTCN539',
                 'task' => 'Develop backend APIs for both admin and user site, design DB',
-                'image' => 'https://via.placeholder.com/150x150/28a745/ffffff?text=NTTH'
+                'image' => 'huong.jpg'
             ],
             [
                 'avatar' => '👨‍💻',
@@ -191,7 +191,7 @@ class WebController extends Controller
                 'role' => 'Frontend (User site)',
                 'id' => 'K23DTCN543',
                 'task' => 'Develop UI for user site, integrate with API',
-                'image' => 'https://via.placeholder.com/150x150/17a2b8/ffffff?text=VHN'
+                'image' => 'hung.jpg'
             ],
             [
                 'avatar' => '👨‍💻',
@@ -199,7 +199,7 @@ class WebController extends Controller
                 'role' => 'Frontend (Admin site)',
                 'id' => 'K23DTCN536',
                 'task' => 'Develop UI for admin site, integrate with API',
-                'image' => 'https://via.placeholder.com/150x150/ffc107/333333?text=NTH'
+                'image' => 'hieu.jpg'
             ],
         ];
         $project = [
