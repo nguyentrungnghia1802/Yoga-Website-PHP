@@ -118,16 +118,17 @@
                     <i class="fas fa-eye"></i> Chi tiết
                 </a>
                 
-                <!-- Xóa đăng ký: Route destroy chưa định nghĩa trong routes/web.php -->
-                <!--
-                <form method="POST" action="#" style="display: inline;">
+                <a href="{{ route('admin.registrations.edit', $registration->id) }}" class="action-btn edit-btn">
+                    <i class="fas fa-edit"></i> Sửa
+                </a>
+                
+                <form method="POST" action="{{ route('admin.registrations.destroy', $registration->id) }}" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc muốn xóa đăng ký này? Hành động này không thể hoàn tác!')">
-                        🗑️ Xóa
+                        <i class="fas fa-trash"></i> Xóa
                     </button>
                 </form>
-                -->
             </div>
         </div>
     @empty
@@ -476,13 +477,22 @@
     background: #138496;
 }
 
+.edit-btn {
+    background: #ffc107;
+    color: #212529;
+}
+
+.edit-btn:hover {
+    background: #e0a800;
+}
+
 .delete-btn {
-    background: #6c757d;
+    background: #dc3545;
     color: white;
 }
 
 .delete-btn:hover {
-    background: #5a6268;
+    background: #c82333;
 }
 
 .empty-state {

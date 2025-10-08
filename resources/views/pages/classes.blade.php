@@ -19,10 +19,32 @@
 
 <div class="class-grid" id="classGrid">
     @foreach($classes as $class)
-    <div class="class-card">
+    <div class="class-card" style="position: relative;">
+        <!-- Full Tag - Top Right Corner -->
+        @if($class->is_full)
+            <div style="position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 10;">
+                🚫 FULL
+            </div>
+        @endif
+        
         <h3>{{ $class->name }}</h3>
         <p>{{ $class->description }}</p>
-        <span class="time">⏰ {{ $class->start_time }} - {{ $class->end_time }}</span>
+        
+        <!-- Schedule Information -->
+        <div class="schedule-info" style="background: #667eea; color: white; padding: 10px; border-radius: 8px; margin: 10px 0;">
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <span style="margin-right: 8px;">📅</span>
+                <strong>Lịch học:</strong> {{ $class->lich_hoc }}
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <span style="margin-right: 8px;">⏰</span>
+                <strong>Giờ học:</strong> {{ $class->start_time }} - {{ $class->end_time }}
+            </div>
+            <div style="display: flex; align-items: center;">
+                <span style="margin-right: 8px;">📆</span>
+                <strong>Thời gian:</strong> {{ \Carbon\Carbon::parse($class->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($class->end_date)->format('d/m/Y') }}
+            </div>
+        </div>
         <div class="price">💰 {{ number_format($class->price ?? 500000, 0, ',', '.') }}đ</div>
         <div style="margin-top: 15px;">
             <span style="background: #51cf66; color: white; padding: 4px 8px; border-radius: 15px; font-size: 12px;">
@@ -31,7 +53,11 @@
         </div>
         <div style="margin-top: 10px; display: flex; gap: 10px;">
             <a href="{{ route('class.detail', $class->id) }}" class="btn" style="flex: 1; background: #f8f9fa; color: #495057; text-align: center; white-space: nowrap; padding: 8px 12px;">👁️ Xem chi tiết</a>
-            <a href="{{ route('register', ['class_id' => $class->id]) }}" class="btn btn-primary" style="flex: 1; text-align: center; white-space: nowrap; padding: 8px 12px;">📝 Đăng ký</a>
+            @if($class->is_full)
+                <button class="btn" style="flex: 1; text-align: center; white-space: nowrap; padding: 8px 12px; background: #6c757d; color: white; cursor: not-allowed;" disabled>📝 Đã hết chỗ</button>
+            @else
+                <a href="{{ route('register', ['class_id' => $class->id]) }}" class="btn btn-primary" style="flex: 1; text-align: center; white-space: nowrap; padding: 8px 12px;">📝 Đăng ký</a>
+            @endif
         </div>
     </div>
     @endforeach

@@ -114,7 +114,7 @@ class AdminController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'class_id' => 'required|exists:classes,id',
-            'start_date' => 'required|date',
+            'package_months' => 'required|in:1,3,6,12',
             'notes' => 'nullable|string|max:255',
         ]);
 
@@ -122,37 +122,55 @@ class AdminController extends Controller
         $customer = Customer::where('email', $request->email)
             ->orWhere('phone', $request->phone)
             ->first();
+            
         if ($customer) {
+            // Update existing customer
             $customer->update([
                 'name' => $request->name,
+                'email' => $request->email,
                 'phone' => $request->phone,
-                'birthday' => $request->start_date, // Use start_date as birthday for now
+                'birthday' => $customer->birthday, // Keep existing birthday
                 'gender' => $request->gender ?? 'female',
-                'address' => null,
-                'note' => null,
+                'address' => $customer->address, // Keep existing address
+                'note' => $customer->note, // Keep existing note
             ]);
         } else {
+            // Create new customer
             $customer = Customer::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'birthday' => $request->start_date, // Use start_date as birthday for now
+                'birthday' => '1990-01-01', // Default birthday since field is required
                 'gender' => $request->gender ?? 'female',
                 'address' => null,
                 'note' => null,
             ]);
         }
 
-    // Calculate pricing (no package_months, just class price)
-    $class = YogaClass::findOrFail($request->class_id);
-    $finalPrice = $class->price;
+        // Get class and calculate discount
+        $class = YogaClass::findOrFail($request->class_id);
+        $packageMonths = $request->package_months;
+        
+        // Discount rates based on package
+        $discountRates = [
+            1 => 0,    // 1 month: 0% discount
+            3 => 5,    // 3 months: 5% discount
+            6 => 10,   // 6 months: 10% discount
+            12 => 15   // 12 months: 15% discount
+        ];
+        
+        $monthlyPrice = $class->price;
+        $totalPrice = $monthlyPrice * $packageMonths; // Tổng giá cho tất cả tháng
+        $discountRate = $discountRates[$packageMonths] ?? 0;
+        $discountAmount = ($totalPrice * $discountRate) / 100;
+        $finalPrice = $totalPrice - $discountAmount;
 
         // Create registration with CONFIRMED status (auto-approved by admin)
         $registration = Registration::create([
             'customer_id' => $customer->id,
             'class_id' => $request->class_id,
-            'package_months' => 1, // set mặc định 1 tháng
-            'discount' => 0, // set mặc định 0%
+            'package_months' => $packageMonths,
+            'discount' => $discountAmount,
             'final_price' => $finalPrice,
             'status' => RegistrationStatus::CONFIRMED,
             'note' => $request->notes,
@@ -165,6 +183,104 @@ class AdminController extends Controller
     {
         $registration = Registration::with(['customer', 'class.teacher'])->findOrFail($id);
         return view('admin.registration_detail', compact('registration'));
+    }
+
+    public function showEditRegistration($id)
+    {
+        $registration = Registration::with(['customer', 'class'])->findOrFail($id);
+        $classes = YogaClass::all();
+        return view('admin.registration_edit', compact('registration', 'classes'));
+    }
+
+    public function updateRegistration(Request $request, $id)
+    {
+        $registration = Registration::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'class_id' => 'required|exists:classes,id',
+            'package_months' => 'required|in:1,3,6,12',
+            'notes' => 'nullable|string|max:255',
+        ]);
+
+        // Update customer
+        $customer = $registration->customer;
+        $customer->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'birthday' => $customer->birthday, // Keep existing birthday
+        ]);
+
+        // Get class and calculate discount
+        $class = YogaClass::findOrFail($request->class_id);
+        $packageMonths = $request->package_months;
+        
+        // Discount rates based on package
+        $discountRates = [
+            1 => 0,    // 1 month: 0% discount
+            3 => 5,    // 3 months: 5% discount
+            6 => 10,   // 6 months: 10% discount
+            12 => 15   // 12 months: 15% discount
+        ];
+        
+        $monthlyPrice = $class->price;
+        $totalPrice = $monthlyPrice * $packageMonths; // Tổng giá cho tất cả tháng
+        $discountRate = $discountRates[$packageMonths] ?? 0;
+        $discountAmount = ($totalPrice * $discountRate) / 100;
+        $finalPrice = $totalPrice - $discountAmount;
+
+        // Update registration
+        $registration->update([
+            'class_id' => $request->class_id,
+            'package_months' => $packageMonths,
+            'discount' => $discountAmount,
+            'final_price' => $finalPrice,
+            'note' => $request->notes,
+        ]);
+
+        return redirect()->route('admin.registrations')->with('success', 'Đã cập nhật đơn đăng ký thành công! Mã đăng ký: #' . $registration->id);
+    }
+
+    public function destroyRegistration($id)
+    {
+        $registration = Registration::findOrFail($id);
+        
+        // Soft delete the registration
+        $registration->delete();
+        
+        return redirect()->route('admin.registrations')->with('success', 'Đã xóa đơn đăng ký #' . $registration->id . ' thành công!');
+    }
+
+    public function searchCustomer(Request $request)
+    {
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        
+        $customer = null;
+        
+        if ($email) {
+            $customer = Customer::where('email', $email)->first();
+        }
+        
+        if (!$customer && $phone) {
+            $customer = Customer::where('phone', $phone)->first();
+        }
+        
+        return response()->json([
+            'customer' => $customer ? [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'birthday' => $customer->birthday,
+                'gender' => $customer->gender,
+                'address' => $customer->address,
+                'note' => $customer->note
+            ] : null
+        ]);
     }
 
     public function approveRegistration($id)

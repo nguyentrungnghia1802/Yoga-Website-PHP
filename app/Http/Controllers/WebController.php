@@ -233,7 +233,7 @@ class WebController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'class_id' => 'required|exists:classes,id',
-            'start_date' => 'required|date',
+            'package_months' => 'required|in:1,3,6,12',
         ]);
 
         // Find or create customer
@@ -242,20 +242,38 @@ class WebController extends Controller
             [
                 'name' => $request->name,
                 'phone' => $request->phone,
-                'birthday' => $request->start_date, // Use start_date as birthday for now
+                'birthday' => '1990-01-01', // Default birthday since field is required
                 'gender' => $request->gender ?? 'female',
                 'address' => null,
                 'note' => null,
             ]
         );
 
+        // Get class and calculate discount
+        $class = YogaClass::find($request->class_id);
+        $packageMonths = $request->package_months;
+        
+        // Discount rates based on package
+        $discountRates = [
+            1 => 0,    // 1 month: 0% discount
+            3 => 5,    // 3 months: 5% discount
+            6 => 10,   // 6 months: 10% discount
+            12 => 15   // 12 months: 15% discount
+        ];
+        
+        $monthlyPrice = $class->price;
+        $totalPrice = $monthlyPrice * $packageMonths; // Tổng giá cho tất cả tháng
+        $discountRate = $discountRates[$packageMonths] ?? 0;
+        $discountAmount = ($totalPrice * $discountRate) / 100;
+        $finalPrice = $totalPrice - $discountAmount;
+
         // Create registration with PENDING status
         $registration = Registration::create([
             'customer_id' => $customer->id,
             'class_id' => $request->class_id,
-            'package_months' => $request->package_months ?? 1,
-            'discount' => 0,
-            'final_price' => YogaClass::find($request->class_id)->price,
+            'package_months' => $packageMonths,
+            'discount' => $discountAmount,
+            'final_price' => $finalPrice,
             'status' => RegistrationStatus::PENDING->value,
             'note' => $request->notes,
         ]);
@@ -295,5 +313,17 @@ class WebController extends Controller
     {
         $registrations = Registration::with(['customer', 'class.teacher'])->latest()->paginate(15);
         return view('admin.registrations', compact('registrations'));
+    }
+
+    public function teachers()
+    {
+        $teachers = Teacher::with('classes')->get();
+        return view('pages.teachers', compact('teachers'));
+    }
+
+    public function teacherDetail($id)
+    {
+        $teacher = Teacher::with('classes')->findOrFail($id);
+        return view('pages.teacher_detail', compact('teacher'));
     }
 }

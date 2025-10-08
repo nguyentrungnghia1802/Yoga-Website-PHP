@@ -23,19 +23,48 @@
             </div>
             <div class="form-group">
                 <label for="className">🏃‍♀️ Chọn lớp học *</label>
-                <select id="className" name="class_id" required>
-                    <option value="">-- Chọn lớp học --</option>
-                    @foreach($classes as $class)
+            <select id="className" name="class_id" required>
+                <option value="">-- Chọn lớp học --</option>
+                @foreach($classes as $class)
+                    @if(!$class->is_full)
                         <option value="{{ $class->id }}" data-price="{{ $class->price }}" 
                                 {{ isset($selectedClassId) && $selectedClassId == $class->id ? 'selected' : '' }}>
-                            {{ $class->name }} - {{ $class->start_time }} - {{ $class->end_time }} ({{ number_format($class->price, 0, ',', '.') }}₫)
+                            {{ $class->name }}
                         </option>
-                    @endforeach
+                    @endif
+                @endforeach
+            </select>
+            </div>
+            
+            <!-- Package Selection -->
+            <div class="form-group" id="packageGroup" style="display: none;">
+                <label for="package">📦 Chọn gói học *</label>
+                <select id="package" name="package_months" required>
+                    <option value="">-- Chọn gói học --</option>
+                    <option value="1">1 tháng (0% giảm giá)</option>
+                    <option value="3">3 tháng (5% giảm giá)</option>
+                    <option value="6">6 tháng (10% giảm giá)</option>
+                    <option value="12">12 tháng (15% giảm giá)</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="startDate">📅 Ngày bắt đầu *</label>
-                <input type="date" id="startDate" name="start_date" required>
+            
+            <!-- Price Display -->
+            <div class="form-group" id="priceDisplay" style="display: none;">
+                <div class="price-info" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>💰 Giá gốc:</span>
+                        <span id="originalPrice">0₫</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>🎯 Giảm giá:</span>
+                        <span id="discountAmount" style="color: #28a745;">0₫</span>
+                    </div>
+                    <hr style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; color: #667eea;">
+                        <span>💳 Tổng thanh toán:</span>
+                        <span id="finalPrice">0₫</span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="experience">🎯 Kinh nghiệm</label>
@@ -69,6 +98,67 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const classNameSelect = document.getElementById('className');
+    const packageGroup = document.getElementById('packageGroup');
+    const packageSelect = document.getElementById('package');
+    const priceDisplay = document.getElementById('priceDisplay');
+    const originalPriceSpan = document.getElementById('originalPrice');
+    const discountAmountSpan = document.getElementById('discountAmount');
+    const finalPriceSpan = document.getElementById('finalPrice');
+
+    // Discount rates for each package
+    const discountRates = {
+        1: 0,    // 1 month: 0% discount
+        3: 5,    // 3 months: 5% discount
+        6: 10,   // 6 months: 10% discount
+        12: 15   // 12 months: 15% discount
+    };
+
+    function calculatePrice() {
+        const selectedOption = classNameSelect.options[classNameSelect.selectedIndex];
+        const packageMonths = parseInt(packageSelect.value);
+        
+        if (!selectedOption.value || !packageMonths) {
+            priceDisplay.style.display = 'none';
+            return;
+        }
+
+        const monthlyPrice = parseFloat(selectedOption.dataset.price);
+        const totalMonths = packageMonths;
+        const totalPrice = monthlyPrice * totalMonths; // Tổng giá cho tất cả tháng
+        const discountRate = discountRates[packageMonths] || 0;
+        const discountAmount = (totalPrice * discountRate) / 100;
+        const finalPrice = totalPrice - discountAmount;
+
+        // Update display
+        originalPriceSpan.textContent = formatPrice(totalPrice);
+        discountAmountSpan.textContent = formatPrice(discountAmount);
+        finalPriceSpan.textContent = formatPrice(finalPrice);
+        
+        priceDisplay.style.display = 'block';
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('vi-VN').format(Math.round(price)) + '₫';
+    }
+
+    // Show package selection when class is selected
+    classNameSelect.addEventListener('change', function() {
+        if (this.value) {
+            packageGroup.style.display = 'block';
+            packageSelect.required = true;
+        } else {
+            packageGroup.style.display = 'none';
+            priceDisplay.style.display = 'none';
+            packageSelect.required = false;
+            packageSelect.value = '';
+        }
+        calculatePrice();
+    });
+
+    // Calculate price when package changes
+    packageSelect.addEventListener('change', calculatePrice);
+
     // Hiển thị thông báo nếu có lớp học được chọn sẵn
     @if(isset($selectedClassId) && $selectedClassId)
         const selectedClass = document.querySelector('#className option[value="{{ $selectedClassId }}"]');
@@ -81,6 +171,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const form = document.getElementById('registerForm');
             form.insertBefore(alert, form.firstChild);
+            
+            // Show package selection and calculate price
+            packageGroup.style.display = 'block';
+            packageSelect.required = true;
+            calculatePrice();
             
             // Tự động focus vào trường tên
             document.getElementById('fullname').focus();

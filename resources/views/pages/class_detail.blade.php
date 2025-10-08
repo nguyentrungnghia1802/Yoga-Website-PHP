@@ -224,17 +224,24 @@
                 <h3>📋 Thông tin lớp học</h3>
                 <div class="info-grid">
                     <div class="info-item">
-                        <span>⏰</span>
-                        <div>
-                            <strong>Thời gian:</strong>
-                            {{ $class->start_time }} - {{ $class->end_time }}
-                        </div>
-                    </div>
-                    <div class="info-item">
                         <span>📅</span>
                         <div>
                             <strong>Lịch học:</strong>
                             {{ $class->lich_hoc }}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span>⏰</span>
+                        <div>
+                            <strong>Giờ học:</strong>
+                            {{ $class->start_time }} - {{ $class->end_time }}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span>📆</span>
+                        <div>
+                            <strong>Thời gian khóa học:</strong>
+                            {{ \Carbon\Carbon::parse($class->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($class->end_date)->format('d/m/Y') }}
                         </div>
                     </div>
                     <div class="info-item">
@@ -256,13 +263,6 @@
                         <div>
                             <strong>Sĩ số:</strong>
                             {{ $registeredStudents->count() }}/{{ $class->quantity }} học viên
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <span>📆</span>
-                        <div>
-                            <strong>Thời gian:</strong>
-                            {{ $class->start_date }} đến {{ $class->end_date }}
                         </div>
                     </div>
                 </div>

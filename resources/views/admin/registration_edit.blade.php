@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Tạo đơn đăng ký mới')
+@section('title', 'Sửa đơn đăng ký')
 
 @section('content')
 <div class="page-header">
@@ -10,8 +10,8 @@
         </a>
     </div>
     <div class="header-content">
-        <h1>📝 Tạo đơn đăng ký mới</h1>
-        <p>Tạo đơn đăng ký cho học viên (tự động duyệt)</p>
+        <h1>✏️ Sửa đơn đăng ký #{{ $registration->id }}</h1>
+        <p>Cập nhật thông tin đăng ký cho học viên</p>
     </div>
 </div>
 
@@ -35,27 +35,29 @@
 <div class="form-container">
     <div class="card">
         <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Thông tin đăng ký</h2>
-        <form id="registerForm" method="POST" action="{{ route('admin.registrations.create') }}" autocomplete="off">
+        <form id="registerForm" method="POST" action="{{ route('admin.registrations.update', $registration->id) }}" autocomplete="off">
             @csrf
+            @method('PUT')
             <div class="form-group">
                 <label for="fullname">👤 Họ và tên *</label>
-                <input type="text" id="fullname" name="name" required placeholder="Nhập họ và tên đầy đủ" value="{{ old('name') }}">
+                <input type="text" id="fullname" name="name" required placeholder="Nhập họ và tên đầy đủ" value="{{ old('name', $registration->customer->name) }}">
             </div>
             <div class="form-group">
                 <label for="email">📧 Email *</label>
-                <input type="email" id="email" name="email" required placeholder="example@email.com" value="{{ old('email') }}">
+                <input type="email" id="email" name="email" required placeholder="example@email.com" value="{{ old('email', $registration->customer->email) }}">
             </div>
             <div class="form-group">
                 <label for="phone">📱 Số điện thoại *</label>
-                <input type="tel" id="phone" name="phone" required placeholder="0909123456" value="{{ old('phone') }}">
+                <input type="tel" id="phone" name="phone" required placeholder="0909123456" value="{{ old('phone', $registration->customer->phone) }}">
             </div>
             <div class="form-group">
                 <label for="class_id">🏃‍♀️ Chọn lớp học *</label>
                 <select id="class_id" name="class_id" required>
                     <option value="">-- Chọn lớp học --</option>
                     @foreach($classes as $class)
-                        @if(!$class->is_full)
-                            <option value="{{ $class->id }}" data-price="{{ $class->price }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>
+                        @if(!$class->is_full || old('class_id', $registration->class_id) == $class->id)
+                            <option value="{{ $class->id }}" data-price="{{ $class->price }}" 
+                                    {{ old('class_id', $registration->class_id) == $class->id ? 'selected' : '' }}>
                                 {{ $class->name }}
                             </option>
                         @endif
@@ -64,14 +66,14 @@
             </div>
             
             <!-- Package Selection -->
-            <div class="form-group" id="packageGroup">
+            <div class="form-group" id="packageGroup" style="display: none;">
                 <label for="package_months">📦 Chọn gói học *</label>
                 <select id="package_months" name="package_months" required>
                     <option value="">-- Chọn gói học --</option>
-                    <option value="1" {{ old('package_months', 1) == 1 ? 'selected' : '' }}>1 tháng (0% giảm giá)</option>
-                    <option value="3" {{ old('package_months') == 3 ? 'selected' : '' }}>3 tháng (5% giảm giá)</option>
-                    <option value="6" {{ old('package_months') == 6 ? 'selected' : '' }}>6 tháng (10% giảm giá)</option>
-                    <option value="12" {{ old('package_months') == 12 ? 'selected' : '' }}>12 tháng (15% giảm giá)</option>
+                    <option value="1" {{ old('package_months', $registration->package_months) == 1 ? 'selected' : '' }}>1 tháng (0% giảm giá)</option>
+                    <option value="3" {{ old('package_months', $registration->package_months) == 3 ? 'selected' : '' }}>3 tháng (5% giảm giá)</option>
+                    <option value="6" {{ old('package_months', $registration->package_months) == 6 ? 'selected' : '' }}>6 tháng (10% giảm giá)</option>
+                    <option value="12" {{ old('package_months', $registration->package_months) == 12 ? 'selected' : '' }}>12 tháng (15% giảm giá)</option>
                 </select>
             </div>
             
@@ -103,15 +105,14 @@
             </div>
             <div class="form-group">
                 <label for="notes">📝 Ghi chú</label>
-                <textarea id="notes" name="notes" rows="3" placeholder="Yêu cầu đặc biệt hoặc thông tin bổ sung...">{{ old('notes') }}</textarea>
+                <textarea id="notes" name="notes" rows="3" placeholder="Yêu cầu đặc biệt hoặc thông tin bổ sung...">{{ old('notes', $registration->note) }}</textarea>
             </div>
-            
             
             <div class="checkbox-group">
-                <label for="admin_confirm">✅ Tự động duyệt đơn đăng ký (Admin)</label>
+                <label for="admin_confirm">✅ Cập nhật đơn đăng ký (Admin)</label>
             </div>
             
-            <button type="submit" class="btn btn-primary btn-full">🎯 Tạo đơn đăng ký</button>
+            <button type="submit" class="btn btn-primary btn-full">🎯 Cập nhật đơn đăng ký</button>
         </form>
     </div>
 </div>
@@ -154,6 +155,15 @@
     color: #666;
     margin: 0;
 }
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.alert-success {
     background: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
@@ -263,21 +273,6 @@
     width: 100%;
     justify-content: center;
 }
-
-.price-display {
-    border: 2px solid #28a745;
-    background: #d4edda !important;
-}
-
-.price-display h4 {
-    color: #155724;
-    margin-bottom: 10px;
-}
-
-.price-display p {
-    margin: 5px 0;
-    color: #155724;
-}
 </style>
 @endpush
 
@@ -291,11 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const originalPriceSpan = document.getElementById('originalPrice');
     const discountAmountSpan = document.getElementById('discountAmount');
     const finalPriceSpan = document.getElementById('finalPrice');
-    
-    // Auto-fill elements
-    const emailInput = document.getElementById('email');
-    const phoneInput = document.getElementById('phone');
-    const nameInput = document.getElementById('fullname');
 
     // Discount rates for each package
     const discountRates = {
@@ -333,98 +323,33 @@ document.addEventListener('DOMContentLoaded', function() {
         return new Intl.NumberFormat('vi-VN').format(Math.round(price)) + '₫';
     }
 
-    // Auto-fill customer data when email or phone is entered
-    function checkExistingCustomer() {
-        const email = emailInput.value.trim();
-        const phone = phoneInput.value.trim();
-        
-        if (email || phone) {
-            fetch('{{ route("admin.customers.search") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    email: email,
-                    phone: phone
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.customer) {
-                    // Auto-fill existing customer data
-                    nameInput.value = data.customer.name;
-                    emailInput.value = data.customer.email;
-                    phoneInput.value = data.customer.phone;
-                    
-                    // Show notification
-                    showNotification('✅ Đã tìm thấy khách hàng trong hệ thống!', 'success');
-                } else {
-                    // Clear fields if no customer found
-                    if (!email) nameInput.value = '';
-                    if (!phone) nameInput.value = '';
-                }
-            })
-            .catch(error => {
-                console.log('Error checking customer:', error);
-            });
+    // Show package selection when class is selected
+    classNameSelect.addEventListener('change', function() {
+        if (this.value) {
+            packageGroup.style.display = 'block';
+            packageSelect.required = true;
+        } else {
+            packageGroup.style.display = 'none';
+            priceDisplay.style.display = 'none';
+            packageSelect.required = false;
+            packageSelect.value = '';
         }
-    }
+        calculatePrice();
+    });
 
-    function showNotification(message, type) {
-        // Remove existing notifications
-        const existingNotifications = document.querySelectorAll('.auto-fill-notification');
-        existingNotifications.forEach(notification => notification.remove());
-        
-        const notification = document.createElement('div');
-        notification.className = 'auto-fill-notification';
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-            ${type === 'success' ? 'background: #28a745;' : 'background: #dc3545;'}
-        `;
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after 3 seconds
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-in';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
-    // Calculate price when class or package changes
-    classNameSelect.addEventListener('change', calculatePrice);
+    // Calculate price when package changes
     packageSelect.addEventListener('change', calculatePrice);
 
-    // Auto-fill when email or phone changes
-    emailInput.addEventListener('blur', checkExistingCustomer);
-    phoneInput.addEventListener('blur', checkExistingCustomer);
+    // Initialize on page load
+    if (classNameSelect.value) {
+        packageGroup.style.display = 'block';
+        packageSelect.required = true;
+        calculatePrice();
+    }
 
     // Auto-focus on name field
     document.getElementById('fullname').focus();
 });
 </script>
-
-<style>
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
-}
-</style>
 @endpush
 @endsection

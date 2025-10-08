@@ -69,10 +69,6 @@
                                 <span class="info-value">{{ $registration->customer->address }}</span>
                             </div>
                         @endif
-                        <div class="info-row">
-                            <span class="info-label">📅 Tham gia:</span>
-                            <span class="info-value">{{ $registration->customer ? $registration->customer->created_at->format('d/m/Y') : $registration->created_at->format('d/m/Y') }}</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -96,11 +92,11 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">🕒 Lịch học:</span>
-                        <span class="info-value">{{ $registration->class->schedule }}</span>
+                        <span class="info-value">{{ $registration->class->lich_hoc }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">👥 Sức chứa:</span>
-                        <span class="info-value">{{ $registration->class->capacity }} người</span>
+                        <span class="info-label">👥 Số lượng:</span>
+                        <span class="info-value">{{ $registration->class->quantity }} người</span>
                     </div>
                     @if($registration->class->description)
                         <div class="info-row">
@@ -175,12 +171,14 @@
             </div>
         @endif
 
-        <div class="action-group">
-            <h3>🛠️ Quản lý</h3>
-            <div class="action-buttons">
-                <!-- Các route show/destroy này không tồn tại trong routes/web.php -->
+        @if($registration->status->value === 'PENDING')
+            <div class="action-group">
+                <h3>🛠️ Quản lý</h3>
+                <div class="action-buttons">
+                    <!-- Các route show/destroy này không tồn tại trong routes/web.php -->
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 
