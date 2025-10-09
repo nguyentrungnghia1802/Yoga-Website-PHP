@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('birthday');
             $table->unsignedInteger('exp_year');
             $table->string('description', 255);
-            $table->string('avatar', 255);
+            $table->string('avatar', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

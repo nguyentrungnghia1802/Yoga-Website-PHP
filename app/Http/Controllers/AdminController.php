@@ -538,7 +538,10 @@ class AdminController extends Controller
             'avatar' => 'nullable|string|max:255',
         ]);
 
-        Teacher::create($request->all());
+        $teacherData = $request->all();
+        $teacherData['avatar'] = $request->avatar ?? 'default-avatar.jpg'; // Giá trị mặc định
+        
+        Teacher::create($teacherData);
         
         return redirect()->route('admin.teachers')->with('success', 'Đã tạo giảng viên thành công!');
     }
